@@ -48,11 +48,20 @@ const LoadElectionScreen = ({ setElection }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+  const resetServerFiles = () => {
+    fetch('/convert/reset', { method: 'post' }).catch(error => {
+      console.log('failed resetServerFiles()', error) // eslint-disable-line no-console
+    })
+  }
+
   const getOutputFile = (electionFileName: string) => {
     const encodedName = encodeURIComponent(electionFileName)
     fetch(`/convert/election/output?name=${encodedName}`)
       .then(r => r.json())
-      .then(setElection)
+      .then(election => {
+        resetServerFiles()
+        setElection(election)
+      })
       .catch(error => {
         console.log('failed getOutputFile()', error) // eslint-disable-line no-console
       })

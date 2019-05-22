@@ -1,31 +1,33 @@
 import React from 'react'
 
-import { ButtonEventFunction, OptionalElection } from '../config/types'
+import { ButtonEventFunction, Election } from '../config/types'
 
 import Button from '../components/Button'
-import Heading from '../components/Heading'
 import Prose from '../components/Prose'
+import ResultsProcessor from '../components/ResultsProcessor'
 
 interface Props {
-  election: OptionalElection
+  election: Election
   programCard: ButtonEventFunction
 }
 
 const PrecinctsScreen = ({ election, programCard }: Props) => {
   return (
     <React.Fragment>
-      <Heading>
-        <Prose>
-          {election && <p>{election.title}</p>}
-
-          <h1>Dashboard</h1>
-        </Prose>
-      </Heading>
-      <div>
-        <Button onClick={programCard} data-id="admin">
-          Program Card
-        </Button>
-      </div>
+      <Prose>
+        <h1>{election.title}</h1>
+        <p>Select the action you wish to perform.</p>
+        <h2>Create Cards</h2>
+        <p>
+          <Button disabled onClick={programCard} data-id="admin">
+            Election Clerk Card
+          </Button>{' '}
+          <Button disabled onClick={programCard} data-id="admin">
+            Poll Worker Card
+          </Button>
+        </p>
+        <ResultsProcessor election={election} />
+      </Prose>
     </React.Fragment>
   )
 }
