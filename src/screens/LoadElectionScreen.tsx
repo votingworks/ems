@@ -8,7 +8,7 @@ import Screen from '../components/Screen'
 
 const FileField = styled.label`
   display: block;
-  margin: 1.5rem 0;
+  margin-bottom: 1rem;
   & > strong {
     display: block;
   }
@@ -25,66 +25,94 @@ const Loaded = styled.p`
   }
 `
 
-interface File {
+interface VxFile {
   name: string
   path: string
+}
+
+interface VxFiles {
+  inputFiles: VxFile[]
+  outputFiles: VxFile[]
+}
+
+interface InputFile {
+  name: string
+  file: File
 }
 
 interface Props {
   setElection: SetElection
 }
 
-const LoadElectionConfigScreen = ({ setElection }: Props) => {
-  const [files, setFiles] = useState<File[]>([])
+const LoadElectionScreen = ({ setElection }: Props) => {
+  const [inputFiles, setInputFiles] = useState<VxFile[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const getElectionConfigFile = (electionFileName: string) => {
+  const getOutputFile = (electionFileName: string) => {
     const encodedName = encodeURIComponent(electionFileName)
     fetch(`/convert/election/output?name=${encodedName}`)
       .then(r => r.json())
       .then(setElection)
       .catch(error => {
-        console.log('failed getElectionConfigFile()', error) // eslint-disable-line no-console
+        console.log('failed getOutputFile()', error) // eslint-disable-line no-console
       })
   }
 
-  const createElectionConfigFile = (electionFileName: string) => {
+  const processInputFiles = (electionFileName: string) => {
     fetch('/convert/election/process', { method: 'post' })
       .then(r => r.json())
       .then(response => {
         if (response.status === 'ok') {
-          getElectionConfigFile(electionFileName)
+          getOutputFile(electionFileName)
         }
       })
       .catch(error => {
-        console.log('failed createElectionConfigFile()', error) // eslint-disable-line no-console
+        console.log('failed processInputFiles()', error) // eslint-disable-line no-console
       })
   }
 
-  const getElectionStatus = () => {
+  const updateStatus = () => {
     fetch('/convert/election/files')
       .then(r => r.json())
-      .then(files => {
+      .then((files: VxFiles) => {
         setIsLoading(true)
-        const { inputFiles, outputFiles } = files
 
-        const electionFile = outputFiles[0]
+        const electionFile = files.outputFiles[0]
         if (electionFile.path) {
-          getElectionConfigFile(electionFile.name)
+          getOutputFile(electionFile.name)
           return
         }
 
-        const allInputFilesExist = inputFiles.every((f: File) => !!f.path)
+        const allInputFilesExist = files.inputFiles.every(f => !!f.path)
         if (allInputFilesExist) {
-          createElectionConfigFile(electionFile.name)
+          processInputFiles(electionFile.name)
           return
         }
 
-        setFiles(inputFiles)
+        setInputFiles(files.inputFiles)
         setIsLoading(false)
       })
       .catch(error => {
-        console.log('failed getElectionStatus()', error) // eslint-disable-line no-console
+        console.log('failed updateStatus()', error) // eslint-disable-line no-console
+      })
+  }
+
+  const submitFile = ({ file, name }: InputFile) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('name', name)
+    fetch('/convert/election/submitfile', {
+      method: 'post',
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(response => {
+        if (response.status === 'ok') {
+          updateStatus()
+        }
+      })
+      .catch(error => {
+        console.log('failed handleFileInput()', error) // eslint-disable-line no-console
       })
   }
 
@@ -92,27 +120,12 @@ const LoadElectionConfigScreen = ({ setElection }: Props) => {
     const input = event.target as HTMLInputElement
     const file = input.files && input.files[0]
     const name = input.name
-    if (file) {
-      const formData = new FormData()
-      formData.append('name', name)
-      formData.append('file', file)
-      fetch('/convert/election/submitfile', {
-        method: 'post',
-        body: formData,
-      })
-        .then(res => res.json())
-        .then(response => {
-          if (response.status === 'ok') {
-            getElectionStatus()
-          }
-        })
-        .catch(error => {
-          console.log('failed handleFileInput()', error) // eslint-disable-line no-console
-        })
+    if (file && name) {
+      submitFile({ file, name })
     }
   }
 
-  useEffect(getElectionStatus, [])
+  useEffect(updateStatus, [])
 
   return (
     <Screen>
@@ -123,8 +136,9 @@ const LoadElectionConfigScreen = ({ setElection }: Props) => {
               <h1>Loading…</h1>
             ) : (
               <React.Fragment>
-                <h1>Load SEMS Files</h1>
-                {files.map((file: File, i: number) => (
+                <h1>Configure VxServer</h1>
+                <p>Load the following files from a USB drive, etc.</p>
+                {inputFiles.map((file: VxFile, i: number) => (
                   <FileField key={file.name} htmlFor={`f${i}`}>
                     <h3>{file.name}</h3>
                     {file.path ? (
@@ -150,4 +164,4 @@ const LoadElectionConfigScreen = ({ setElection }: Props) => {
   )
 }
 
-export default LoadElectionConfigScreen
+export default LoadElectionScreen
