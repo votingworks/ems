@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { ButtonEvent, CardData, OptionalElection } from './config/types'
 
 import Brand from './components/Brand'
-import Button from './components/Button'
 import ButtonBar from './components/ButtonBar'
 import Main, { MainChild } from './components/Main'
 import Screen from './components/Screen'
@@ -81,13 +80,7 @@ const App: React.FC = () => {
           )}
         </Main>
         <ButtonBar secondary separatePrimaryButton>
-          <Button
-            disabled={isProgrammingCard}
-            onClick={programCard}
-            data-id="admin"
-          >
-            Program Card
-          </Button>
+          <div />
           <Brand>VxServer</Brand>
         </ButtonBar>
       </Screen>
