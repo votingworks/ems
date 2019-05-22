@@ -75,7 +75,7 @@ const App: React.FC = () => {
             </MainChild>
           ) : (
             <MainChild maxWidth={false}>
-              <DashboardScreen programCard={programCard} />
+              <DashboardScreen election={election} programCard={programCard} />
             </MainChild>
           )}
         </Main>
