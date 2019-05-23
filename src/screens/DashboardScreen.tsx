@@ -19,10 +19,10 @@ const PrecinctsScreen = ({ election, programCard }: Props) => {
         <p>Select the action you wish to perform.</p>
         <h2>Create Cards</h2>
         <p>
-          <Button disabled onClick={programCard} data-id="admin">
+          <Button onClick={programCard} data-id="clerk">
             Election Clerk Card
           </Button>{' '}
-          <Button disabled onClick={programCard} data-id="admin">
+          <Button onClick={programCard} data-id="pollworker">
             Poll Worker Card
           </Button>
         </p>
