@@ -56,7 +56,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
 
   const getOutputFile = (electionFileName: string) => {
     const encodedName = encodeURIComponent(electionFileName)
-    fetch(`/convert/election/output?name=${encodedName}`)
+    fetch(`/convert/election/output?name=${encodedName}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(election => {
         resetServerFiles()
@@ -81,7 +81,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
   }
 
   const updateStatus = () => {
-    fetch('/convert/election/files')
+    fetch('/convert/election/files', { cache: 'no-store' })
       .then(r => r.json())
       .then((files: VxFiles) => {
         setIsLoading(true)
