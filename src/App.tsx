@@ -54,13 +54,15 @@ const App: React.FC = () => {
           body: formData,
         })
         break
+      default:
+        break
     }
 
     setIsProgrammingCard(false)
   }
 
   const fetchElection = async () => {
-    return fetch('/card/read_long')
+    return fetch('/card/read_long', { cache: 'no-store' })
       .then(result => result.json())
       .then(resultJSON => JSON.parse(resultJSON.longValue))
   }
@@ -84,7 +86,7 @@ const App: React.FC = () => {
 
   if (!checkCardInterval) {
     checkCardInterval = window.setInterval(() => {
-      fetch('/card/read')
+      fetch('/card/read', { cache: 'no-store' })
         .then(result => result.json())
         .then(resultJSON => {
           if (resultJSON.shortValue) {
