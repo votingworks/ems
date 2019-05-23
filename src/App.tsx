@@ -26,9 +26,37 @@ const App: React.FC = () => {
   )
   const unsetElection = () => setElection(undefined)
 
-  const programCard = (event: ButtonEvent) => {
+  const programCard = async (event: ButtonEvent) => {
     const id = (event.target as HTMLElement).dataset.id
-    setIsProgrammingCard(id === 'admin')
+    setIsProgrammingCard(true)
+
+    const electionJSON = JSON.stringify(election)
+    const hash = 'bogusfornow'
+    const shortValue = JSON.stringify({
+      t: id,
+      h: hash,
+    })
+
+    let formData = new FormData()
+
+    switch (id) {
+      case 'pollworker':
+        await fetch('/card/write', {
+          method: 'post',
+          body: shortValue,
+        })
+        break
+      case 'clerk':
+        formData.append('short_value', shortValue)
+        formData.append('long_value', electionJSON)
+        await fetch('/card/write_short_and_long', {
+          method: 'post',
+          body: formData,
+        })
+        break
+    }
+
+    setIsProgrammingCard(false)
   }
 
   const fetchElection = async () => {
@@ -38,7 +66,7 @@ const App: React.FC = () => {
   }
 
   const processCardData = (cardData: CardData, longValueExists: boolean) => {
-    if (cardData.t === 'admin') {
+    if (cardData.t === 'clerk') {
       if (!election) {
         if (longValueExists && !loadingElection) {
           loadingElection = true
