@@ -43,6 +43,9 @@ const App: React.FC = () => {
           fetchElection().then(election => {
             setElection(election)
             loadingElection = false
+
+            // no need to keep checking
+            window.clearInterval(checkCardInterval)
           })
         }
       }
