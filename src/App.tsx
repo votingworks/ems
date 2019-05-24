@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ButtonEvent, CardData, OptionalElection } from './config/types'
 
 import Brand from './components/Brand'
+import Button from './components/Button'
 import ButtonBar from './components/ButtonBar'
 import Main, { MainChild } from './components/Main'
 import Screen from './components/Screen'
@@ -23,6 +24,7 @@ const App: React.FC = () => {
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
   )
+  const unsetElection = () => setElection(undefined)
 
   const programCard = (event: ButtonEvent) => {
     const id = (event.target as HTMLElement).dataset.id
@@ -79,9 +81,9 @@ const App: React.FC = () => {
             </MainChild>
           )}
         </Main>
-        <ButtonBar secondary separatePrimaryButton>
-          <div />
+        <ButtonBar secondary naturalOrder separatePrimaryButton>
           <Brand>VxServer</Brand>
+          <Button onClick={unsetElection}>Factory Reset</Button>
         </ButtonBar>
       </Screen>
     )

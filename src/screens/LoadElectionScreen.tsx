@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { InputEvent, SetElection } from '../config/types'
 
+import Button from '../components/Button'
 import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
 import Screen from '../components/Screen'
@@ -43,6 +44,9 @@ interface InputFile {
 interface Props {
   setElection: SetElection
 }
+
+const allFilesExist = (files: VxFile[]) => files.every(f => !!f.path)
+const anyFilesExist = (files: VxFile[]) => files.find(f => !!f.path)
 
 const LoadElectionScreen = ({ setElection }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
@@ -92,8 +96,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
           return
         }
 
-        const allInputFilesExist = files.inputFiles.every(f => !!f.path)
-        if (allInputFilesExist) {
+        if (allFilesExist(files.inputFiles)) {
           processInputFiles(electionFile.name)
           return
         }
@@ -134,6 +137,11 @@ const LoadElectionScreen = ({ setElection }: Props) => {
     }
   }
 
+  const resetUploadFiles = () => {
+    resetServerFiles()
+    updateStatus()
+  }
+
   useEffect(updateStatus, [])
 
   return (
@@ -164,6 +172,13 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                     )}
                   </FileField>
                 ))}
+                <Button
+                  disabled={!anyFilesExist(inputFiles)}
+                  small
+                  onClick={resetUploadFiles}
+                >
+                  Reset Files
+                </Button>
               </React.Fragment>
             )}
           </Prose>
