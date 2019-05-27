@@ -29,6 +29,7 @@ const App: React.FC = () => {
     setIsProgrammingCard(true)
 
     const electionJSON = JSON.stringify(election)
+    // TODO: https://github.com/votingworks/ems/issues/8
     const hash = 'bogusfornow'
     const shortValue = JSON.stringify({
       t: id,
