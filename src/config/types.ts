@@ -91,6 +91,31 @@ export interface ActivationData {
   precinct: Precinct
 }
 
+// Votes
+export type CandidateVote = Candidate[]
+export type YesNoVote = 'yes' | 'no'
+export type OptionalYesNoVote = YesNoVote | undefined
+export type Vote = CandidateVote | YesNoVote
+export type OptionalVote = Vote | undefined
+export type VotesDict = Dictionary<Vote>
+
+// Tallies
+export type ContestOption = Candidate | 'yes' | 'no'
+export interface ContestOptionTally {
+  option: ContestOption
+  tally: number
+}
+
+export interface ContestTally {
+  contest: Contest
+  tallies: ContestOptionTally[]
+}
+
+export interface ElectionTally {
+  precinctId: string | undefined
+  contestTallies: ContestTally[]
+}
+
 // Smart Card Content
 export type CardDataTypes = 'voter' | 'pollworker' | 'clerk'
 export interface CardData {
@@ -109,4 +134,11 @@ export interface PollworkerCardData extends CardData {
 export interface ClerkCardData extends CardData {
   readonly t: 'clerk'
   readonly h: string
+}
+
+// modular screens
+export type SetScreenFunction = (newScreen: string) => void
+export interface ScreenProps {
+  election: Election
+  setCurrentScreen: SetScreenFunction
 }

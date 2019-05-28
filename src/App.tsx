@@ -11,6 +11,7 @@ import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
 
 import LoadElectionScreen from './screens/LoadElectionScreen'
 import DashboardScreen from './screens/DashboardScreen'
+import TestDeckScreen from './screens/TestDeckScreen'
 
 import 'normalize.css'
 import './App.css'
@@ -20,6 +21,7 @@ let checkCardInterval = 0
 let loadingElection = false
 
 const App: React.FC = () => {
+  const [currentScreen, setCurrentScreen] = useState('')
   const [isProgrammingCard, setIsProgrammingCard] = useState(false)
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
@@ -102,6 +104,28 @@ const App: React.FC = () => {
   }
 
   if (election) {
+    if (currentScreen) {
+      switch (currentScreen) {
+        case 'testdeck':
+          return (
+            <Screen>
+              <Main>
+                <MainChild>
+                  <TestDeckScreen
+                    election={election}
+                    setCurrentScreen={setCurrentScreen}
+                  />
+                </MainChild>
+              </Main>
+              <ButtonBar secondary naturalOrder separatePrimaryButton>
+                <Brand>VxServer</Brand>
+                <Button onClick={unsetElection}>Factory Reset</Button>
+              </ButtonBar>
+            </Screen>
+          )
+        default:
+      }
+    }
     return (
       <Screen>
         <Main>
@@ -111,7 +135,11 @@ const App: React.FC = () => {
             </MainChild>
           ) : (
             <MainChild maxWidth={false}>
-              <DashboardScreen election={election} programCard={programCard} />
+              <DashboardScreen
+                election={election}
+                programCard={programCard}
+                setCurrentScreen={setCurrentScreen}
+              />
             </MainChild>
           )}
         </Main>

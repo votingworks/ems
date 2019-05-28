@@ -1,6 +1,10 @@
 import React from 'react'
 
-import { ButtonEventFunction, Election } from '../config/types'
+import {
+  ButtonEventFunction,
+  Election,
+  SetScreenFunction,
+} from '../config/types'
 
 import Button from '../components/Button'
 import Prose from '../components/Prose'
@@ -9,9 +13,18 @@ import ResultsProcessor from '../components/ResultsProcessor'
 interface Props {
   election: Election
   programCard: ButtonEventFunction
+  setCurrentScreen: SetScreenFunction
 }
 
-const PrecinctsScreen = ({ election, programCard }: Props) => {
+const DashboardScreen = ({
+  election,
+  programCard,
+  setCurrentScreen,
+}: Props) => {
+  const gotoTestDeck = () => {
+    setCurrentScreen('testdeck')
+  }
+
   return (
     <React.Fragment>
       <Prose>
@@ -26,10 +39,14 @@ const PrecinctsScreen = ({ election, programCard }: Props) => {
             Poll Worker Card
           </Button>
         </p>
+        <h2>Test Decks</h2>
+        <p>
+          <Button onClick={gotoTestDeck}>Review Test Deck Results</Button>
+        </p>
         <ResultsProcessor election={election} />
       </Prose>
     </React.Fragment>
   )
 }
 
-export default PrecinctsScreen
+export default DashboardScreen
