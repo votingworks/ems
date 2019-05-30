@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 
 import {
   ButtonEvent,
-  Candidate,
   CandidateContest,
-  ContestOption,
-  ContestOptionTally,
   Election,
   ElectionTally,
   ScreenProps,
@@ -15,6 +12,9 @@ import {
 import Button from '../components/Button'
 import ButtonList from '../components/ButtonList'
 import Prose from '../components/Prose'
+import Tally from '../components/Tally'
+
+import { tallyVotes } from '../lib/votecounting'
 
 interface GenerateTestDeckParams {
   election: Election
@@ -69,54 +69,6 @@ const generateTestDeckBallots = ({
   return votes
 }
 
-interface TallyParams {
-  election: Election
-  precinctId?: string
-  votes: VotesDict[]
-}
-
-const tallyVotes = ({ election, precinctId, votes }: TallyParams) => {
-  const electionTally: ElectionTally = {
-    contestTallies: [],
-    precinctId,
-  }
-
-  election.contests.forEach(contest => {
-    let options: ContestOption[]
-    if (contest.type === 'yesno') {
-      options = ['yes', 'no']
-    } else {
-      options = contest.candidates
-    }
-
-    const tallies: ContestOptionTally[] = options.map(option => {
-      return { option, tally: 0 }
-    })
-
-    votes.forEach(vote => {
-      const selectedOption = vote[contest.id]
-      if (!selectedOption) {
-        return
-      }
-
-      const optionTally = tallies.find(optionTally => {
-        if (contest.type === 'yesno') {
-          return optionTally.option === selectedOption
-        } else {
-          const candidateOption = optionTally.option as Candidate
-          const selectedCandidateOption = selectedOption[0] as Candidate
-          return candidateOption.id === selectedCandidateOption.id
-        }
-      })!
-      optionTally.tally += 1
-    })
-
-    electionTally.contestTallies.push({ contest, tallies })
-  })
-
-  return electionTally
-}
-
 const TestDeckScreen = (props: ScreenProps) => {
   const [electionTally, setElectionTally] = useState<ElectionTally | undefined>(
     undefined
@@ -149,26 +101,7 @@ const TestDeckScreen = (props: ScreenProps) => {
           {election.title} -- {tallyPrecinctLabel}
         </h1>
         <h2>Test Deck Expected Results</h2>
-        {electionTally.contestTallies.map(contestTally => {
-          const { contest } = contestTally
-          return (
-            <React.Fragment key={`div-${contest.id}`}>
-              <h2>{contest.title}</h2>
-              <table>
-                {contestTally.tallies.map(tally => (
-                  <tr key={contest.id}>
-                    <td>
-                      {contest.type === 'candidate'
-                        ? (tally.option as Candidate).name
-                        : tally.option}
-                    </td>
-                    <td>{tally.tally}</td>
-                  </tr>
-                ))}
-              </table>
-            </React.Fragment>
-          )
-        })}
+        <Tally election={election} electionTally={electionTally} />
       </Prose>
     )
   } else {
