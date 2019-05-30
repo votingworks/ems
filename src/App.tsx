@@ -41,6 +41,14 @@ const App: React.FC = () => {
     const id = (event.target as HTMLElement).dataset.id
     setIsProgrammingCard(true)
 
+    if (id === 'override') {
+      await fetch('/card/write_protect_override', {
+        method: 'post',
+      })
+      setIsProgrammingCard(false)
+      return
+    }
+
     const electionJSON = JSON.stringify(election)
     // TODO: https://github.com/votingworks/ems/issues/8
     const hash = 'bogusfornow'
