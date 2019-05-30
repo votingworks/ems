@@ -99,6 +99,8 @@ export type Vote = CandidateVote | YesNoVote
 export type OptionalVote = Vote | undefined
 export type VotesDict = Dictionary<Vote>
 
+export type VotesByPrecinct = Dictionary<VotesDict[]>
+
 // Tallies
 export type ContestOption = Candidate | 'yes' | 'no'
 export interface ContestOptionTally {
@@ -114,6 +116,11 @@ export interface ContestTally {
 export interface ElectionTally {
   precinctId: string | undefined
   contestTallies: ContestTally[]
+}
+
+export interface FullElectionTally {
+  precinctTallies: Dictionary<ElectionTally>
+  overallTally: ElectionTally
 }
 
 // Smart Card Content

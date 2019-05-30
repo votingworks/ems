@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 
-import { ButtonEvent, CardData, OptionalElection } from './config/types'
+import {
+  ButtonEvent,
+  CardData,
+  FullElectionTally,
+  OptionalElection,
+} from './config/types'
 
 import Brand from './components/Brand'
 import Button from './components/Button'
@@ -12,6 +17,7 @@ import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
 import LoadElectionScreen from './screens/LoadElectionScreen'
 import DashboardScreen from './screens/DashboardScreen'
 import TestDeckScreen from './screens/TestDeckScreen'
+import TallyScreen from './screens/TallyScreen'
 
 import 'normalize.css'
 import './App.css'
@@ -23,6 +29,9 @@ let loadingElection = false
 const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState('')
   const [isProgrammingCard, setIsProgrammingCard] = useState(false)
+  const [fullElectionTally, setFullElectionTally] = useState<
+    FullElectionTally | undefined
+  >(undefined)
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
   )
@@ -106,6 +115,28 @@ const App: React.FC = () => {
   if (election) {
     if (currentScreen) {
       switch (currentScreen) {
+        case 'tally':
+          return (
+            <Screen>
+              <Main>
+                <MainChild>
+                  {fullElectionTally ? (
+                    <TallyScreen
+                      election={election}
+                      setCurrentScreen={setCurrentScreen}
+                      fullElectionTally={fullElectionTally}
+                    />
+                  ) : (
+                    <p>no tally</p>
+                  )}
+                </MainChild>
+              </Main>
+              <ButtonBar secondary naturalOrder separatePrimaryButton>
+                <Brand>VxServer</Brand>
+                <Button onClick={unsetElection}>Factory Reset</Button>
+              </ButtonBar>
+            </Screen>
+          )
         case 'testdeck':
           return (
             <Screen>
@@ -139,6 +170,7 @@ const App: React.FC = () => {
                 election={election}
                 programCard={programCard}
                 setCurrentScreen={setCurrentScreen}
+                setFullElectionTally={setFullElectionTally}
               />
             </MainChild>
           )}
