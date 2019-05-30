@@ -118,15 +118,11 @@ const App: React.FC = () => {
             <Screen>
               <Main>
                 <MainChild>
-                  {fullElectionTally ? (
-                    <TallyScreen
-                      election={election}
-                      setCurrentScreen={setCurrentScreen}
-                      fullElectionTally={fullElectionTally}
-                    />
-                  ) : (
-                    <p>no tally</p>
-                  )}
+                  <TallyScreen
+                    election={election}
+                    setCurrentScreen={setCurrentScreen}
+                    fullElectionTally={fullElectionTally}
+                  />
                 </MainChild>
               </Main>
               <ButtonBar secondary naturalOrder separatePrimaryButton>
