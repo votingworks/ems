@@ -34,15 +34,3 @@ jobs:
           name: Build static files for serving
           command: |
             yarn build
-      - run:
-          name: Set up python tools for backend
-          command: |
-            cd server
-            sudo make install-smartcard
-            make install-dependencies
-            make install-dev-dependencies
-      - run:
-          name: Run Python Tests and Coverage
-          command: |
-            cd server
-            pipenv run make coverage

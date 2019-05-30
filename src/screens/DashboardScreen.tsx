@@ -61,6 +61,11 @@ const DashboardScreen = ({
             Poll Worker Card
           </Button>
         </p>
+        <p>
+          <Button onClick={programCard} data-id="override">
+            Override Write Protection
+          </Button>
+        </p>
         <h2>Test Decks</h2>
         <p>
           <Button onClick={gotoTestDeck}>Review Test Deck Results</Button>
