@@ -13,6 +13,7 @@ import ButtonBar from './components/ButtonBar'
 import Main, { MainChild } from './components/Main'
 import Screen from './components/Screen'
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
+import useInterval from './hooks/useInterval'
 
 import LoadElectionScreen from './screens/LoadElectionScreen'
 import DashboardScreen from './screens/DashboardScreen'
@@ -87,30 +88,25 @@ const App: React.FC = () => {
           fetchElection().then(election => {
             setElection(election)
             loadingElection = false
-
-            // no need to keep checking
-            window.clearInterval(checkCardInterval)
           })
         }
       }
     }
   }
 
-  if (!checkCardInterval) {
-    checkCardInterval = window.setInterval(() => {
-      fetch('/card/read', { cache: 'no-store' })
-        .then(result => result.json())
-        .then(resultJSON => {
-          if (resultJSON.shortValue) {
-            const cardData = JSON.parse(resultJSON.shortValue) as CardData
-            processCardData(cardData, resultJSON.longValueExists)
-          }
-        })
-        .catch(() => {
-          window.clearInterval(checkCardInterval)
-        })
-    }, 1000)
-  }
+  useInterval(() => {
+    fetch('/card/read', { cache: 'no-store' })
+      .then(result => result.json())
+      .then(resultJSON => {
+        if (resultJSON.shortValue) {
+          const cardData = JSON.parse(resultJSON.shortValue) as CardData
+          processCardData(cardData, resultJSON.longValueExists)
+        }
+      })
+      .catch(() => {
+        window.clearInterval(checkCardInterval)
+      })
+  }, 1000)
 
   if (election) {
     if (currentScreen) {
