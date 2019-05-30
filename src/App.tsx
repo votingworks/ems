@@ -23,13 +23,12 @@ import TallyScreen from './screens/TallyScreen'
 import 'normalize.css'
 import './App.css'
 
-let checkCardInterval = 0
-
 let loadingElection = false
 
 const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState('')
   const [isProgrammingCard, setIsProgrammingCard] = useState(false)
+  const [cardReaderWorking, setCardReaderWorking] = useState(true)
   const [fullElectionTally, setFullElectionTally] = useState<
     FullElectionTally | undefined
   >(undefined)
@@ -94,19 +93,22 @@ const App: React.FC = () => {
     }
   }
 
-  useInterval(() => {
-    fetch('/card/read', { cache: 'no-store' })
-      .then(result => result.json())
-      .then(resultJSON => {
-        if (resultJSON.shortValue) {
-          const cardData = JSON.parse(resultJSON.shortValue) as CardData
-          processCardData(cardData, resultJSON.longValueExists)
-        }
-      })
-      .catch(() => {
-        window.clearInterval(checkCardInterval)
-      })
-  }, 1000)
+  useInterval(
+    () => {
+      fetch('/card/read', { cache: 'no-store' })
+        .then(result => result.json())
+        .then(resultJSON => {
+          if (resultJSON.shortValue) {
+            const cardData = JSON.parse(resultJSON.shortValue) as CardData
+            processCardData(cardData, resultJSON.longValueExists)
+          }
+        })
+        .catch(() => {
+          setCardReaderWorking(false)
+        })
+    },
+    cardReaderWorking ? 1000 : undefined
+  )
 
   if (election) {
     if (currentScreen) {

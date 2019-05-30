@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 const noop = () => {}
 
-function useInterval(callback: () => void, delay: number) {
+function useInterval(callback: () => void, delay: number | undefined) {
   const savedCallback = useRef(noop)
 
   useEffect(() => {
