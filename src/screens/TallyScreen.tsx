@@ -7,45 +7,51 @@ import Prose from '../components/Prose'
 import Tally from '../components/Tally'
 
 export interface TallyScreenProps extends ScreenProps {
-  fullElectionTally: FullElectionTally
+  fullElectionTally: FullElectionTally | undefined
 }
 
 const TallyScreen = (props: TallyScreenProps) => {
   const { election, setCurrentScreen, fullElectionTally } = props
 
-  const precinctTallies = []
-  for (let precinctId in fullElectionTally.precinctTallies) {
-    precinctTallies.push(fullElectionTally.precinctTallies[precinctId]!)
-  }
-  return (
-    <Prose>
-      <Button
-        onClick={() => {
-          setCurrentScreen('')
-        }}
-      >
-        back to Dashboard
-      </Button>
-      <h1>{election.title} -- Overall Tally</h1>
-      <Tally
-        election={election}
-        electionTally={fullElectionTally.overallTally}
-      />
+  if (!fullElectionTally) {
+    return <p>no tally</p>
+  } else {
+    const precinctTallies = []
+    for (let precinctId in fullElectionTally.precinctTallies) {
+      precinctTallies.push(fullElectionTally.precinctTallies[precinctId]!)
+    }
 
-      {precinctTallies.map(precinctTally => (
-        <React.Fragment key={precinctTally.precinctId}>
-          <h1>
-            Tally for{' '}
-            {
-              election.precincts.find(p => p.id === precinctTally.precinctId!)!
-                .name
-            }
-          </h1>
-          <Tally election={election} electionTally={precinctTally} />
-        </React.Fragment>
-      ))}
-    </Prose>
-  )
+    return (
+      <Prose>
+        <Button
+          onClick={() => {
+            setCurrentScreen('')
+          }}
+        >
+          back to Dashboard
+        </Button>
+        <h1>{election.title} -- Overall Tally</h1>
+        <Tally
+          election={election}
+          electionTally={fullElectionTally.overallTally}
+        />
+
+        {precinctTallies.map(precinctTally => (
+          <React.Fragment key={precinctTally.precinctId}>
+            <h1>
+              Tally for{' '}
+              {
+                election.precincts.find(
+                  p => p.id === precinctTally.precinctId!
+                )!.name
+              }
+            </h1>
+            <Tally election={election} electionTally={precinctTally} />
+          </React.Fragment>
+        ))}
+      </Prose>
+    )
+  }
 }
 
 export default TallyScreen
