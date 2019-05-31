@@ -19,6 +19,7 @@ interface Props {
   programCard: ButtonEventFunction
   setFullElectionTally: (arg0: FullElectionTally) => void
   setCurrentScreen: SetScreenFunction
+  unsetElection: () => void
 }
 
 const DashboardScreen = ({
@@ -26,6 +27,7 @@ const DashboardScreen = ({
   programCard,
   setCurrentScreen,
   setFullElectionTally,
+  unsetElection,
 }: Props) => {
   const gotoTestDeck = () => {
     setCurrentScreen('testdeck')
@@ -52,6 +54,7 @@ const DashboardScreen = ({
       <Prose>
         <h1>{election.title}</h1>
         <p>Select the action you wish to perform.</p>
+
         <h2>Create Cards</h2>
         <p>
           <Button onClick={programCard} data-id="clerk">
@@ -66,14 +69,19 @@ const DashboardScreen = ({
             Override Write Protection
           </Button>
         </p>
-        <h2>Test Decks</h2>
+
+        <h2>Test Ballot Decks</h2>
         <p>
-          <Button onClick={gotoTestDeck}>Review Test Deck Results</Button>
+          <Button onClick={gotoTestDeck}>View Test Ballot Deck Results</Button>
         </p>
+
+        <ResultsProcessor election={election} />
 
         <h2>Tallying</h2>
         <input type="file" id="vx_cvrs" onChange={handleCVRsFile} />
-        <ResultsProcessor election={election} />
+
+        <h2>Factory Reset</h2>
+        <Button onClick={unsetElection}>Factory Reset</Button>
       </Prose>
     </React.Fragment>
   )

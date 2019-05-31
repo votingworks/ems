@@ -63,3 +63,24 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+@media print {
+  html {
+    background: #ffffff;
+
+    /* Adjust printed ballot font-size */
+    font-size: 16px !important; /* stylelint-disable-line declaration-no-important */
+  }
+}
+
+/* Utilities */
+.print-only {
+  display: none;
+}
+@media print {
+  .print-only {
+    display: block;
+  }
+  .no-print {
+    display: none;
+  }
+}
