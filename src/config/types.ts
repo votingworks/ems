@@ -143,7 +143,7 @@ export interface ClerkCardData extends CardData {
   readonly h: string
 }
 
-// modular screens
+// Screens
 export type SetScreenFunction = (newScreen: string) => void
 export interface ScreenProps {
   election: Election

@@ -8,7 +8,6 @@ import {
 } from './config/types'
 
 import Brand from './components/Brand'
-import Button from './components/Button'
 import ButtonBar from './components/ButtonBar'
 import Main, { MainChild } from './components/Main'
 import Screen from './components/Screen'
@@ -123,38 +122,18 @@ const App: React.FC = () => {
       switch (currentScreen) {
         case 'tally':
           return (
-            <Screen>
-              <Main>
-                <MainChild>
-                  <TallyScreen
-                    election={election}
-                    setCurrentScreen={setCurrentScreen}
-                    fullElectionTally={fullElectionTally}
-                  />
-                </MainChild>
-              </Main>
-              <ButtonBar secondary naturalOrder separatePrimaryButton>
-                <Brand>VxServer</Brand>
-                <Button onClick={unsetElection}>Factory Reset</Button>
-              </ButtonBar>
-            </Screen>
+            <TallyScreen
+              election={election}
+              setCurrentScreen={setCurrentScreen}
+              fullElectionTally={fullElectionTally}
+            />
           )
         case 'testdeck':
           return (
-            <Screen>
-              <Main>
-                <MainChild>
-                  <TestDeckScreen
-                    election={election}
-                    setCurrentScreen={setCurrentScreen}
-                  />
-                </MainChild>
-              </Main>
-              <ButtonBar secondary naturalOrder separatePrimaryButton>
-                <Brand>VxServer</Brand>
-                <Button onClick={unsetElection}>Factory Reset</Button>
-              </ButtonBar>
-            </Screen>
+            <TestDeckScreen
+              election={election}
+              setCurrentScreen={setCurrentScreen}
+            />
           )
         default:
       }
@@ -173,13 +152,14 @@ const App: React.FC = () => {
                 programCard={programCard}
                 setCurrentScreen={setCurrentScreen}
                 setFullElectionTally={setFullElectionTally}
+                unsetElection={unsetElection}
               />
             </MainChild>
           )}
         </Main>
         <ButtonBar secondary naturalOrder separatePrimaryButton>
           <Brand>VxServer</Brand>
-          <Button onClick={unsetElection}>Factory Reset</Button>
+          <div />
         </ButtonBar>
       </Screen>
     )
