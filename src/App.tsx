@@ -7,10 +7,6 @@ import {
   OptionalElection,
 } from './config/types'
 
-import Brand from './components/Brand'
-import ButtonBar from './components/ButtonBar'
-import Main, { MainChild } from './components/Main'
-import Screen from './components/Screen'
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
 import useInterval from './hooks/useInterval'
 
@@ -139,29 +135,14 @@ const App: React.FC = () => {
       }
     }
     return (
-      <Screen>
-        <Main>
-          {isProgrammingCard ? (
-            <MainChild center>
-              <h1>Programming card…</h1>
-            </MainChild>
-          ) : (
-            <MainChild maxWidth={false}>
-              <DashboardScreen
-                election={election}
-                programCard={programCard}
-                setCurrentScreen={setCurrentScreen}
-                setFullElectionTally={setFullElectionTally}
-                unsetElection={unsetElection}
-              />
-            </MainChild>
-          )}
-        </Main>
-        <ButtonBar secondary naturalOrder separatePrimaryButton>
-          <Brand>VxServer</Brand>
-          <div />
-        </ButtonBar>
-      </Screen>
+      <DashboardScreen
+        election={election}
+        isProgrammingCard={isProgrammingCard}
+        programCard={programCard}
+        setCurrentScreen={setCurrentScreen}
+        setFullElectionTally={setFullElectionTally}
+        unsetElection={unsetElection}
+      />
     )
   }
 
