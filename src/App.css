@@ -52,6 +52,13 @@ body,
   }
 }
 
+@media print {
+  /* Chrome on Linux prints scrollbars */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Typography */
 html {
   background: #edeff0;
