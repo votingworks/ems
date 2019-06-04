@@ -55,6 +55,12 @@ const DashboardScreen = ({
     }
   }
 
+  const ejectUSB = () => {
+    fetch('/usbstick/eject', {
+      method: 'post',
+    })
+  }
+
   return (
     <Screen>
       <Main>
@@ -103,6 +109,7 @@ const DashboardScreen = ({
       </Main>
       <ButtonBar secondary naturalOrder separatePrimaryButton>
         <Brand>VxServer</Brand>
+        <Button onClick={ejectUSB}>Eject USB</Button>
         <div />
       </ButtonBar>
     </Screen>
