@@ -5,6 +5,7 @@ import {
   Dictionary,
   Election,
   ElectionTally,
+  Party,
   VotesByPrecinct,
   VotesDict,
 } from '../config/types'
@@ -113,6 +114,42 @@ export function tallyVotes({ election, precinctId, votes }: TallyParams) {
   })
 
   return electionTally
+}
+
+interface FilterTalliesByPartyParams {
+  election: Election
+  electionTally: ElectionTally
+  party?: Party
+}
+
+export function filterTalliesByParty({
+  election,
+  electionTally,
+  party,
+}: FilterTalliesByPartyParams) {
+  if (!party) {
+    return electionTally
+  }
+
+  const districts = Array.prototype.concat.apply(
+    [],
+    election.ballotStyles
+      .filter(bs => bs.partyId === party.id)
+      .map(bs => bs.districts)
+  )
+  const contestIds = election.contests
+    .filter(
+      contest =>
+        districts.includes(contest.districtId) && contest.partyId === party.id
+    )
+    .map(contest => contest.id)
+
+  return {
+    ...electionTally,
+    contestTallies: electionTally.contestTallies.filter(contestTally =>
+      contestIds.includes(contestTally.contest.id)
+    ),
+  }
 }
 
 interface FullTallyParams {
