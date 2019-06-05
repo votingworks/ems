@@ -108,7 +108,7 @@ const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
           {electionTally ? (
             <React.Fragment>
               <Prose>
-                <h1>Test Deck Expected Results</h1>
+                <h1>Test Deck Results</h1>
                 <p>
                   <strong>Election:</strong> {election.title}
                   <br />
@@ -116,7 +116,7 @@ const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
                 </p>
                 <p className="no-print">
                   <Button primary onClick={window.print}>
-                    Print Expected Results Report
+                    Print Results Report
                   </Button>
                 </p>
                 <p className="no-print">
@@ -129,8 +129,8 @@ const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
                 <hr />
                 <Tally election={election} electionTally={electionTally} />
                 <p>
-                  End of Test Deck Expected Results for {election.title},{' '}
-                  {precinct.name}
+                  End of Test Deck Results for {election.title}, {precinct.name}
+                  .
                 </p>
               </div>
             </React.Fragment>
