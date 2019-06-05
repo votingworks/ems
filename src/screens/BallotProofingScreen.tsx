@@ -34,10 +34,13 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
         <MainChild maxWidth={false}>
           {ballotStyle ? (
             <React.Fragment>
-              <Prose>
-                <h1>Ballot Proofing -- {ballotStyle.id}</h1>
-              </Prose>
-              <Prose>
+              <Prose maxWidth={false}>
+                <h1>Ballot Style {ballotStyle.id}</h1>
+                <p>
+                  Contests and voter choices for ballot style{' '}
+                  <strong>{ballotStyle.id}</strong>.
+                </p>
+                <hr />
                 {election.contests
                   .filter(contest =>
                     ballotStyle.districts.includes(contest.districtId)
@@ -59,16 +62,15 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
                       )}
                     </React.Fragment>
                   ))}
+                <hr />
+                <p>End of ballot style “{ballotStyle.id}”</p>
               </Prose>
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <Prose>
-                <h1>Ballot Proofing</h1>
-                <p>
-                  Select desired ballot style for{' '}
-                  <strong>{election.title}</strong>.
-                </p>
+              <Prose compact marginBottom>
+                <p>{election.title}</p>
+                <h1>Ballot Styles</h1>
               </Prose>
               <ButtonList>
                 {sortedBallotIds.map(id => (
