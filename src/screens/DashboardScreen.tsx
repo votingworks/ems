@@ -78,9 +78,9 @@ const DashboardScreen = ({
               <h1>{election.title}</h1>
               <p>Select the action you wish to perform.</p>
 
-              <h2>Proof Ballot Styles</h2>
+              <h2>Ballot Styles</h2>
               <p>
-                <Button onClick={gotoBallotProofing}>Proof</Button>
+                <Button onClick={gotoBallotProofing}>View Ballot Styles</Button>
               </p>
 
               <h2>Create Cards</h2>
@@ -118,7 +118,9 @@ const DashboardScreen = ({
       </Main>
       <ButtonBar secondary naturalOrder separatePrimaryButton>
         <Brand>VxServer</Brand>
-        <Button onClick={ejectUSB}>Eject USB</Button>
+        <Button small onClick={ejectUSB}>
+          Eject USB
+        </Button>
         <div />
       </ButtonBar>
     </Screen>
