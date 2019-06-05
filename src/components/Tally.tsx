@@ -16,40 +16,59 @@ interface Props {
   electionTally: ElectionTally
 }
 
-const Tally = ({ electionTally }: Props) => (
-  <React.Fragment>
-    {electionTally.contestTallies.map(({ contest, tallies }) => (
-      <Contest key={`div-${contest.id}`}>
-        <Prose>
-          <h2>
-            {contest.section}, {contest.title}
-          </h2>
-          <Table>
-            <tbody>
-              {tallies.map(tally => {
-                const key = `${contest.id}-${
-                  contest.type === 'candidate'
-                    ? (tally.option as Candidate).id
-                    : tally.option
-                }`
-                const choice =
-                  contest.type === 'candidate'
-                    ? (tally.option as Candidate).name
-                    : tally.option
-                return (
-                  <tr key={key}>
-                    <td>{choice}</td>
-                    <TD narrow textAlign="right">
-                      {tally.tally}
-                    </TD>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
-        </Prose>
-      </Contest>
-    ))}
-  </React.Fragment>
-)
+const Tally = ({ election, electionTally }: Props) => {
+  const { precinctId } = electionTally
+  // if there is no precinctId defined, we don't need to do extra work
+  // that will later be ignored, so we just use the empty array
+  const ballotStyles = precinctId
+    ? election.ballotStyles.filter(bs => bs.precincts.includes(precinctId))
+    : []
+  const districts = Array.prototype.concat.apply(
+    [],
+    ballotStyles.map(bs => bs.districts)
+  )
+
+  return (
+    <React.Fragment>
+      {electionTally.contestTallies.map(({ contest, tallies }) => {
+        const talliesRelevant = electionTally.precinctId
+          ? districts.includes(contest.districtId)
+          : true
+
+        return (
+          <Contest key={`div-${contest.id}`}>
+            <Prose>
+              <h2>
+                {contest.section}, {contest.title}
+              </h2>
+              <Table>
+                <tbody>
+                  {tallies.map(tally => {
+                    const key = `${contest.id}-${
+                      contest.type === 'candidate'
+                        ? (tally.option as Candidate).id
+                        : tally.option
+                    }`
+                    const choice =
+                      contest.type === 'candidate'
+                        ? (tally.option as Candidate).name
+                        : tally.option
+                    return (
+                      <tr key={key}>
+                        <td>{choice}</td>
+                        <TD narrow textAlign="right">
+                          {talliesRelevant ? tally.tally : 'X'}
+                        </TD>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            </Prose>
+          </Contest>
+        )
+      })}
+    </React.Fragment>
+  )
+}
 export default Tally
