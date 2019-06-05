@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import styled from 'styled-components'
 
 import {
   ButtonEvent,
@@ -18,7 +19,11 @@ import Tally from '../components/Tally'
 import Main, { MainChild } from '../components/Main'
 import Screen from '../components/Screen'
 
-import { tallyVotes } from '../lib/votecounting'
+import { filterTalliesByParty, tallyVotes } from '../lib/votecounting'
+
+const ElectionTallyReport = styled.div`
+  page-break-before: always;
+`
 
 interface GenerateTestDeckParams {
   election: Election
@@ -101,37 +106,60 @@ const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
     setElectionTally(undefined)
   }
 
+  const ballotStylePartyIds = Array.from(
+    new Set(election.ballotStyles.map(bs => bs.partyId))
+  )
+
   return (
     <Screen>
       <Main>
         <MainChild maxWidth={false}>
           {electionTally ? (
             <React.Fragment>
-              <Prose>
+              <Prose className="no-print">
                 <h1>Test Deck Results</h1>
                 <p>
                   <strong>Election:</strong> {election.title}
                   <br />
                   <strong>Precinct:</strong> {precinct.name}
                 </p>
-                <p className="no-print">
+                <p>
                   <Button primary onClick={window.print}>
                     Print Results Report
                   </Button>
                 </p>
-                <p className="no-print">
+                <p>
                   <Button small onClick={resetDeck}>
                     Back to All Decks
                   </Button>
                 </p>
               </Prose>
               <div className="print-only">
-                <hr />
-                <Tally election={election} electionTally={electionTally} />
-                <p>
-                  End of Test Deck Results for {election.title}, {precinct.name}
-                  .
-                </p>
+                {ballotStylePartyIds.map(partyId => {
+                  const party = election.parties.find(p => p.id === partyId)
+                  const electionTallyForParty = filterTalliesByParty({
+                    election,
+                    electionTally,
+                    party,
+                  })
+                  const electionTitle = `${party ? party.name : ''} ${
+                    election.title
+                  }`
+                  return (
+                    <ElectionTallyReport key={partyId}>
+                      <h1>Test Deck Results</h1>
+                      <p>
+                        <strong>Election:</strong> {electionTitle}
+                        <br />
+                        <strong>Precinct:</strong> {precinct.name}
+                      </p>
+                      <Tally
+                        election={election}
+                        electionTally={electionTallyForParty}
+                      />
+                    </ElectionTallyReport>
+                  )
+                })}
               </div>
             </React.Fragment>
           ) : (
