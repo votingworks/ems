@@ -18,7 +18,6 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
   const selectBallotStyle = (event: ButtonEvent) => {
     const { id = '' } = (event.target as HTMLElement).dataset
     setBallotStyle(election.ballotStyles.find(bs => bs.id === id))
-    // do something with the ballot style
   }
 
   const reset = () => {
