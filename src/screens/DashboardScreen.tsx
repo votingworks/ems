@@ -39,6 +39,10 @@ const DashboardScreen = ({
     setCurrentScreen('testdeck')
   }
 
+  const gotoBallotProofing = () => {
+    setCurrentScreen('ballotproofing')
+  }
+
   const handleCVRsFile = (event: InputEvent) => {
     const input = event.target as HTMLInputElement
     const file = input.files && input.files[0]
@@ -73,6 +77,11 @@ const DashboardScreen = ({
             <Prose>
               <h1>{election.title}</h1>
               <p>Select the action you wish to perform.</p>
+
+              <h2>Proof Ballot Styles</h2>
+              <p>
+                <Button onClick={gotoBallotProofing}>Proof</Button>
+              </p>
 
               <h2>Create Cards</h2>
               <p>

@@ -12,6 +12,7 @@ import useInterval from './hooks/useInterval'
 
 import LoadElectionScreen from './screens/LoadElectionScreen'
 import DashboardScreen from './screens/DashboardScreen'
+import BallotProofingScreen from './screens/BallotProofingScreen'
 import TestDeckScreen from './screens/TestDeckScreen'
 import TallyScreen from './screens/TallyScreen'
 
@@ -127,6 +128,13 @@ const App: React.FC = () => {
         case 'testdeck':
           return (
             <TestDeckScreen
+              election={election}
+              setCurrentScreen={setCurrentScreen}
+            />
+          )
+        case 'ballotproofing':
+          return (
+            <BallotProofingScreen
               election={election}
               setCurrentScreen={setCurrentScreen}
             />
