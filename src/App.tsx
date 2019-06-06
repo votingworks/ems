@@ -41,7 +41,9 @@ const App: React.FC = () => {
       await fetch('/card/write_protect_override', {
         method: 'post',
       })
-      setIsProgrammingCard(false)
+      window.setTimeout(() => {
+        setIsProgrammingCard(false)
+      }, 1000)
       return
     }
 
