@@ -8,10 +8,9 @@ import {
   SetScreenFunction,
 } from '../config/types'
 
-import Brand from '../components/Brand'
 import Button from '../components/Button'
-import ButtonBar from '../components/ButtonBar'
 import Main, { MainChild } from '../components/Main'
+import MainNav from '../components/MainNav'
 import Prose from '../components/Prose'
 import ResultsProcessor from '../components/ResultsProcessor'
 import Screen from '../components/Screen'
@@ -74,55 +73,54 @@ const DashboardScreen = ({
           </MainChild>
         ) : (
           <MainChild maxWidth={false}>
-            <Prose>
-              <h1>{election.title}</h1>
-              <p>Select the action you wish to perform.</p>
-
-              <h2>Ballot Styles</h2>
+            <Prose maxWidth={false}>
+              <h1>Pre-Election Actions</h1>
+              <h3>View Data</h3>
               <p>
-                <Button onClick={gotoBallotProofing}>View Ballot Styles</Button>
+                <Button onClick={gotoBallotProofing}>
+                  Proof Ballot Styles
+                </Button>{' '}
+                <Button onClick={gotoTestDeck}>
+                  Print Test Ballot Deck Results
+                </Button>
               </p>
 
-              <h2>Create Cards</h2>
+              <h3>Program Cards</h3>
               <p>
                 <Button onClick={programCard} data-id="clerk">
                   Election Clerk Card
                 </Button>{' '}
                 <Button onClick={programCard} data-id="pollworker">
                   Poll Worker Card
-                </Button>
-              </p>
-              <p>
+                </Button>{' '}
                 <Button onClick={programCard} data-id="override">
                   Override Write Protection
                 </Button>
               </p>
 
-              <h2>Test Ballot Decks</h2>
+              <hr />
+
+              <h1>Election Day Actions</h1>
+              <h2>Tabulate and Print Results</h2>
+              <p>Load the following VxScan files from a USB drive:</p>
+              <input type="file" id="vx_cvrs" onChange={handleCVRsFile} />
+
+              <ResultsProcessor election={election} />
               <p>
-                <Button onClick={gotoTestDeck}>
-                  View Test Ballot Deck Results
+                <Button small onClick={ejectUSB}>
+                  Eject USB
                 </Button>
               </p>
 
-              <ResultsProcessor election={election} />
+              <hr />
 
-              <h2>Tallying</h2>
-              <input type="file" id="vx_cvrs" onChange={handleCVRsFile} />
-
-              <h2>Factory Reset</h2>
-              <Button onClick={unsetElection}>Factory Reset</Button>
+              <h1>Post-Election Actions</h1>
+              <Button onClick={unsetElection}>Clear Election</Button>
             </Prose>
           </MainChild>
         )}
       </Main>
-      <ButtonBar secondary naturalOrder separatePrimaryButton>
-        <Brand>VxServer</Brand>
-        <Button small onClick={ejectUSB}>
-          Eject USB
-        </Button>
-        <div />
-      </ButtonBar>
+      <MainNav title={election.title} />
     </Screen>
   )
 }
