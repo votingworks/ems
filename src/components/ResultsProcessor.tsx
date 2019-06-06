@@ -164,33 +164,31 @@ const ResultsProcessor = ({ election }: Props) => {
 
   return (
     <React.Fragment>
-      <h2>Process Scanner CVRs</h2>
+      <h2>Create SEMS export file</h2>
       {isLoading && <span>Loading…</span>}
       {hasResults && <span>Downloading results file…</span>}
       {!isLoading && !hasResults && (
         <React.Fragment>
-          <p>Load the following file from a USB drive, etc.</p>
-          <ul>
-            {inputFiles.map((file: VxFile, i: number) => (
-              <li key={file.name}>
-                <FileField htmlFor={`f${i}`}>
-                  <h3>{file.name}</h3>
-                  {file.path ? (
-                    <Loaded>Loaded</Loaded>
-                  ) : (
-                    <p>
-                      <input
-                        type="file"
-                        id={`f${i}`}
-                        name={file.name}
-                        onChange={handleFileInput}
-                      />
-                    </p>
-                  )}
-                </FileField>
-              </li>
-            ))}
-          </ul>
+          <p>Load the following VxScan files from a USB drive:</p>
+          {inputFiles.map((file: VxFile, i: number) => (
+            <div key={file.name}>
+              <FileField htmlFor={`f${i}`}>
+                <h3>{file.name}</h3>
+                {file.path ? (
+                  <Loaded>Loaded</Loaded>
+                ) : (
+                  <p>
+                    <input
+                      type="file"
+                      id={`f${i}`}
+                      name={file.name}
+                      onChange={handleFileInput}
+                    />
+                  </p>
+                )}
+              </FileField>
+            </div>
+          ))}
         </React.Fragment>
       )}
     </React.Fragment>

@@ -17,7 +17,7 @@ const ButtonBar = styled('nav')<Props>`
   border-bottom: 1px solid rgb(169, 169, 169);
   background: ${({ dark = true }) =>
     dark ? '#455a64' : 'rgba(0, 0, 0, 0.05)'};
-  padding: 0.5rem;
+  padding: 0.25rem;
 
   & > *:first-child {
     order: ${({ naturalOrder = false }) => (naturalOrder ? undefined : '2')};
@@ -42,7 +42,6 @@ const ButtonBar = styled('nav')<Props>`
       flex: 0;
       margin: ${({ centerOnlyChild = true }) =>
         centerOnlyChild ? 'auto' : undefined};
-      min-width: 33.333%;
     }
   }
   @media print {
