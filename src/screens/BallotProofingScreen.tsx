@@ -37,7 +37,7 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
               <Prose maxWidth={false}>
                 <h1>Ballot Style {ballotStyle.id}</h1>
                 <p>
-                  Contests and voter choices for ballot style{' '}
+                  Contest titles and choices for ballot style{' '}
                   <strong>{ballotStyle.id}</strong>.
                 </p>
                 <hr />
