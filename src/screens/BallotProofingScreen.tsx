@@ -42,8 +42,10 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
                 </p>
                 <hr />
                 {election.contests
-                  .filter(contest =>
-                    ballotStyle.districts.includes(contest.districtId)
+                  .filter(
+                    contest =>
+                      ballotStyle.districts.includes(contest.districtId) &&
+                      ballotStyle.partyId === contest.partyId
                   )
                   .map(contest => (
                     <React.Fragment key={contest.id}>
