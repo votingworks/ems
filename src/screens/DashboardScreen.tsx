@@ -23,7 +23,7 @@ interface Props {
   programCard: ButtonEventFunction
   setFullElectionTally: (arg0: FullElectionTally) => void
   setCurrentScreen: SetScreenFunction
-  unsetElection: () => void
+  unconfigure: () => void
 }
 
 const DashboardScreen = ({
@@ -32,7 +32,7 @@ const DashboardScreen = ({
   programCard,
   setCurrentScreen,
   setFullElectionTally,
-  unsetElection,
+  unconfigure,
 }: Props) => {
   const gotoTestDeck = () => {
     setCurrentScreen('testdeck')
@@ -115,7 +115,7 @@ const DashboardScreen = ({
               <hr />
 
               <h1>Post-Election Actions</h1>
-              <Button onClick={unsetElection}>Clear Election</Button>
+              <Button onClick={unconfigure}>Clear all election data</Button>
             </Prose>
           </MainChild>
         )}
