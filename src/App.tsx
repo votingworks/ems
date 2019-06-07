@@ -31,7 +31,11 @@ const App: React.FC = () => {
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
   )
-  const unsetElection = () => setElection(undefined)
+
+  const unconfigure = () => {
+    setElection(undefined)
+    window.localStorage.clear()
+  }
 
   const programCard = async (event: ButtonEvent) => {
     const id = (event.target as HTMLElement).dataset.id
@@ -151,7 +155,7 @@ const App: React.FC = () => {
         programCard={programCard}
         setCurrentScreen={setCurrentScreen}
         setFullElectionTally={setFullElectionTally}
-        unsetElection={unsetElection}
+        unconfigure={unconfigure}
       />
     )
   }
