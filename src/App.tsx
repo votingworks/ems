@@ -15,6 +15,7 @@ import DashboardScreen from './screens/DashboardScreen'
 import BallotProofingScreen from './screens/BallotProofingScreen'
 import TestDeckScreen from './screens/TestDeckScreen'
 import TallyScreen from './screens/TallyScreen'
+import ManualScanScreen from './screens/ManualScanScreen'
 
 import 'normalize.css'
 import './App.css'
@@ -141,6 +142,13 @@ const App: React.FC = () => {
         case 'ballotproofing':
           return (
             <BallotProofingScreen
+              election={election}
+              setCurrentScreen={setCurrentScreen}
+            />
+          )
+        case 'manual-scan':
+          return (
+            <ManualScanScreen
               election={election}
               setCurrentScreen={setCurrentScreen}
             />

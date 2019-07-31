@@ -105,6 +105,16 @@ const DashboardScreen = ({
               <p>Load the following VxScan files from a USB drive:</p>
               <input type="file" id="vx_cvrs" onChange={handleCVRsFile} />
 
+              <p>
+                <Button
+                  onClick={() => {
+                    setCurrentScreen('manual-scan')
+                  }}
+                >
+                  Scan ballots manually
+                </Button>
+              </p>
+
               <ResultsProcessor election={election} />
               <p>
                 <Button small onClick={ejectUSB}>
