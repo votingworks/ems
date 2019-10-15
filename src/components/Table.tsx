@@ -8,15 +8,10 @@ const Table = styled.table`
   & td {
     border-bottom: 1px solid rgb(194, 200, 203);
     padding: 0.25rem 0.5rem;
-    &:first-child {
-      /* padding-left: 0; */
-    }
-    &:last-child {
-      /* padding-right: 0; */
-    }
   }
   & th {
     border-top: 1px solid rgb(194, 200, 203);
+    font-size: 0.75rem;
   }
   & tr:nth-child(2n - 1) {
     td {
