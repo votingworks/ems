@@ -19,7 +19,6 @@ import { parseCVRs, fullTallyVotes } from '../lib/votecounting'
 
 interface Props {
   election: Election
-  isProgrammingCard: boolean
   programCard: ButtonEventFunction
   setFullElectionTally: (arg0: FullElectionTally) => void
   setCurrentScreen: SetScreenFunction
@@ -28,7 +27,6 @@ interface Props {
 
 const DashboardScreen = ({
   election,
-  isProgrammingCard,
   programCard,
   setCurrentScreen,
   setFullElectionTally,
@@ -67,58 +65,50 @@ const DashboardScreen = ({
   return (
     <Screen>
       <Main>
-        {isProgrammingCard ? (
-          <MainChild center>
-            <h1>Programming card…</h1>
-          </MainChild>
-        ) : (
-          <MainChild maxWidth={false}>
-            <Prose maxWidth={false}>
-              <h1>Pre-Election Actions</h1>
-              <h3>View Data</h3>
-              <p>
-                <Button onClick={gotoBallotProofing}>
-                  Proof Ballot Styles
-                </Button>{' '}
-                <Button onClick={gotoTestDeck}>
-                  Print Test Ballot Deck Results
-                </Button>
-              </p>
+        <MainChild maxWidth={false}>
+          <Prose maxWidth={false}>
+            <h1>Pre-Election Actions</h1>
+            <h3>View Data</h3>
+            <p>
+              <Button onClick={gotoBallotProofing}>Proof Ballot Styles</Button>{' '}
+              <Button onClick={gotoTestDeck}>
+                Print Test Ballot Deck Results
+              </Button>
+            </p>
 
-              <h3>Program Cards</h3>
-              <p>
-                <Button onClick={programCard} data-id="clerk">
-                  Election Clerk Card
-                </Button>{' '}
-                <Button onClick={programCard} data-id="pollworker">
-                  Poll Worker Card
-                </Button>{' '}
-                <Button onClick={programCard} data-id="override">
-                  Override Write Protection
-                </Button>
-              </p>
+            <h3>Program Cards</h3>
+            <p>
+              <Button onClick={programCard} data-id="clerk">
+                Election Clerk Card
+              </Button>{' '}
+              <Button onClick={programCard} data-id="pollworker">
+                Poll Worker Card
+              </Button>{' '}
+              <Button onClick={programCard} data-id="override">
+                Override Write Protection
+              </Button>
+            </p>
 
-              <hr />
+            <hr />
 
-              <h1>Election Day Actions</h1>
-              <h2>Tabulate and Print Results</h2>
-              <p>Load the following VxScan files from a USB drive:</p>
-              <input type="file" id="vx_cvrs" onChange={handleCVRsFile} />
+            <h1>Election Day Actions</h1>
+            <h2>Tabulate and Print Results</h2>
+            <p>Load the following VxScan files from a USB drive:</p>
+            <input type="file" id="vx_cvrs" onChange={handleCVRsFile} />
 
-              <ResultsProcessor election={election} />
-              <p>
-                <Button small onClick={ejectUSB}>
-                  Eject USB
-                </Button>
-              </p>
+            <ResultsProcessor election={election} />
+            <p>
+              <Button small onClick={ejectUSB}>
+                Eject USB
+              </Button>
+            </p>
 
-              <hr />
+            <hr />
 
-              <h1>Post-Election Actions</h1>
-              <Button onClick={unconfigure}>Clear all election data</Button>
-            </Prose>
-          </MainChild>
-        )}
+            <h1>Post-Election Actions</h1>
+            <Button onClick={unconfigure}>Clear all election data</Button>
+          </Prose>
+        </MainChild>{' '}
       </Main>
       <MainNav title={election.title} />
     </Screen>
