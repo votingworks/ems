@@ -18,6 +18,7 @@ import TallyScreen from './screens/TallyScreen'
 
 import 'normalize.css'
 import './App.css'
+import WritingCardScreen from './screens/WritingCardScreen'
 
 let loadingElection = false
 
@@ -121,6 +122,9 @@ const App: React.FC = () => {
   )
 
   if (election) {
+    if (isProgrammingCard) {
+      return <WritingCardScreen />
+    }
     if (currentScreen) {
       switch (currentScreen) {
         case 'tally':
@@ -151,7 +155,6 @@ const App: React.FC = () => {
     return (
       <DashboardScreen
         election={election}
-        isProgrammingCard={isProgrammingCard}
         programCard={programCard}
         setCurrentScreen={setCurrentScreen}
         setFullElectionTally={setFullElectionTally}
