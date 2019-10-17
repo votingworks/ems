@@ -200,7 +200,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                     )}
                   </FileField>
                 ))}
-                <p>&ndash; or &ndash;</p>
+                <p>— or —</p>
                 <FileField key="vx-election" htmlFor="vx-election">
                   <h3>Vx Election Definition</h3>
                   {vxElectionFileIsInvalid && <Invalid>Invalid</Invalid>}
