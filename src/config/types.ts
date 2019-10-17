@@ -123,6 +123,14 @@ export interface FullElectionTally {
   overallTally: ElectionTally
 }
 
+// Cast Vote Record
+
+export interface CastVoteRecord extends Dictionary<string | string[]> {
+  _precinctId: string
+  _ballotId: string
+  _ballotStyleId: string
+}
+
 // Smart Card Content
 export type CardDataTypes = 'voter' | 'pollworker' | 'clerk'
 export interface CardData {

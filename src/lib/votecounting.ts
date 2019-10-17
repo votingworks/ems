@@ -1,5 +1,6 @@
 import {
   Candidate,
+  CastVoteRecord,
   ContestOption,
   ContestOptionTally,
   Dictionary,
@@ -8,7 +9,9 @@ import {
   Party,
   VotesByPrecinct,
   VotesDict,
+  YesNoVote,
 } from '../config/types'
+import find from '../utils/find'
 
 // the generic write-in candidate to keep count
 const writeInCandidate: Candidate = {
@@ -22,13 +25,16 @@ interface ParseCVRsParams {
   CVRsText: string
 }
 
-export function parseCVRs({ election, CVRsText }: ParseCVRsParams) {
+export function parseCVRs({
+  election,
+  CVRsText,
+}: ParseCVRsParams): VotesByPrecinct {
   // CVRs are newline-separated JSON objects
   const votesByPrecinct: VotesByPrecinct = {}
 
   CVRsText.split('\n')
     .filter(el => el) // remove empty lines
-    .map(line => JSON.parse(line))
+    .map(line => JSON.parse(line) as CastVoteRecord)
     .forEach(CVR => {
       const vote: VotesDict = {}
       election.contests.forEach(contest => {
@@ -38,15 +44,16 @@ export function parseCVRs({ election, CVRsText }: ParseCVRsParams) {
 
         if (contest.type === 'yesno') {
           // the CVR is encoded the same way
-          vote[contest.id] = CVR[contest.id]
+          vote[contest.id] = CVR[contest.id] as YesNoVote
           return
         }
 
         if (contest.type === 'candidate') {
-          vote[contest.id] = CVR[contest.id].map((candidateId: string) =>
-            candidateId === 'writein'
-              ? writeInCandidate
-              : contest.candidates.find(c => c.id === candidateId)
+          vote[contest.id] = (CVR[contest.id] as string[]).map(candidateId =>
+            find(
+              [writeInCandidate, ...contest.candidates],
+              c => c.id === candidateId
+            )
           )
         }
       })
