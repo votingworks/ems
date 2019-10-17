@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import fileDownload from 'js-file-download'
 
 import { Election, InputEvent } from '../config/types'
+import ConversionClient, { VxFile } from '../lib/ConversionClient'
 
 const electionDefinitionsName = 'Vx Election Definition'
 
@@ -25,16 +26,6 @@ const Loaded = styled.p`
   }
 `
 
-interface VxFile {
-  name: string
-  path: string
-}
-
-interface VxFiles {
-  inputFiles: VxFile[]
-  outputFiles: VxFile[]
-}
-
 interface InputFile {
   name: string
   file: File
@@ -48,24 +39,15 @@ const ResultsProcessor = ({ election }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
   const [hasResults, setHasResults] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [client] = useState(new ConversionClient('/convert', 'results'))
 
-  const submitFile = ({ file, name }: InputFile) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('name', name)
-    fetch('/convert/results/submitfile', {
-      method: 'post',
-      body: formData,
-    })
-      .then(res => res.json())
-      .then(response => {
-        if (response.status === 'ok') {
-          updateStatus() // eslint-disable-line @typescript-eslint/no-use-before-define
-        }
-      })
-      .catch(error => {
-        console.log('failed handleFileInput()', error) // eslint-disable-line no-console
-      })
+  const submitFile = async ({ file, name }: InputFile) => {
+    try {
+      await client.setInputFile(name, file)
+      updateStatus() // eslint-disable-line @typescript-eslint/no-use-before-define
+    } catch (error) {
+      console.log('failed handleFileInput()', error) // eslint-disable-line no-console
+    }
   }
 
   const handleFileInput = (event: InputEvent) => {
@@ -77,90 +59,79 @@ const ResultsProcessor = ({ election }: Props) => {
     }
   }
 
-  const submitElectionDefinitionFile = () => {
+  const submitElectionDefinitionFile = (name: string) => {
     submitFile({
-      name: 'Vx Election Definition',
+      name,
       file: new File([JSON.stringify(election)], 'election.json', {
         type: 'application/json',
       }),
     })
   }
 
-  const resetServerFiles = () => {
-    fetch('/convert/reset', { method: 'post' })
-      .then(r => r.json())
-      .then(response => {
-        if (response.status === 'ok') {
-          setHasResults(false)
-        }
-      })
-      .catch(error => {
-        console.log('failed resetServerFiles()', error) // eslint-disable-line no-console
-      })
+  const resetServerFiles = async () => {
+    try {
+      await client.reset()
+      setHasResults(false)
+    } catch (error) {
+      console.log('failed resetServerFiles()', error) // eslint-disable-line no-console
+    }
   }
 
-  const getOutputFile = (resultsFileName: string) => {
-    const encodedName = encodeURIComponent(resultsFileName)
-    fetch(`/convert/results/output?name=${encodedName}`)
-      .then(response => response.blob())
-      .then(data => {
-        fileDownload(data, 'sems-results.csv', 'text/csv')
-        resetServerFiles()
-      })
-      .catch(error => {
-        console.log('failed getOutputFile()', error) // eslint-disable-line no-console
-      })
+  const getOutputFile = async (resultsFileName: string) => {
+    try {
+      const data = await client.getOutputFile(resultsFileName)
+      fileDownload(data, 'sems-results.csv', 'text/csv')
+      resetServerFiles()
+    } catch (error) {
+      console.log('failed getOutputFile()', error) // eslint-disable-line no-console
+    }
   }
 
-  const processInputFiles = (resultsFileName: string) => {
-    fetch('/convert/results/process', { method: 'post' })
-      .then(r => r.json())
-      .then(response => {
-        if (response.status === 'ok') {
-          getOutputFile(resultsFileName)
-          setIsLoading(false)
-          setHasResults(true)
-        }
-      })
-      .catch(error => {
-        console.log('failed processInputFiles()', error) // eslint-disable-line no-console
-      })
+  const processInputFiles = async (resultsFileName: string) => {
+    try {
+      await client.process()
+      getOutputFile(resultsFileName)
+      setIsLoading(false)
+      setHasResults(true)
+    } catch (error) {
+      console.log('failed processInputFiles()', error) // eslint-disable-line no-console
+    }
   }
 
-  const updateStatus = () => {
-    fetch('/convert/results/files')
-      .then(r => r.json())
-      .then((files: VxFiles) => {
-        setIsLoading(true)
+  const updateStatus = async () => {
+    try {
+      const files = await client.getFiles()
+      setIsLoading(true)
 
-        const electionDefinitionsFile = files.inputFiles[0]
-        if (!electionDefinitionsFile.path) {
-          submitElectionDefinitionFile()
-        }
+      const electionDefinitionsFile = files.inputFiles[0]
+      if (!electionDefinitionsFile.path) {
+        submitElectionDefinitionFile(electionDefinitionsFile.name)
+      }
 
-        const resultsFile = files.outputFiles[0]
-        if (resultsFile.path) {
-          getOutputFile(resultsFile.name)
-          return
-        }
+      const resultsFile = files.outputFiles[0]
+      if (resultsFile.path) {
+        getOutputFile(resultsFile.name)
+        return
+      }
 
-        const allInputFilesExist = files.inputFiles.every(f => !!f.path)
-        if (allInputFilesExist) {
-          processInputFiles(resultsFile.name)
-          return
-        }
+      const allInputFilesExist = files.inputFiles.every(f => !!f.path)
+      if (allInputFilesExist) {
+        processInputFiles(resultsFile.name)
+        return
+      }
 
-        setInputFiles(
-          files.inputFiles.filter(f => f.name !== electionDefinitionsName)
-        )
-        setIsLoading(false)
-      })
-      .catch(error => {
-        console.log('failed updateStatus()', error) // eslint-disable-line no-console
-      })
+      setInputFiles(
+        files.inputFiles.filter(f => f.name !== electionDefinitionsName)
+      )
+      setIsLoading(false)
+    } catch (error) {
+      console.log('failed updateStatus()', error) // eslint-disable-line no-console
+    }
   }
 
-  useEffect(updateStatus, [])
+  useEffect(() => {
+    updateStatus()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <React.Fragment>
