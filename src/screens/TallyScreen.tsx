@@ -45,7 +45,9 @@ const TallyScreen = (props: TallyScreenProps) => {
         </Main>
         <ButtonBar secondary naturalOrder separatePrimaryButton>
           <Brand>VxServer</Brand>
-          <Button onClick={goToDashboard}>Dashboard</Button>
+          <Button small onClick={goToDashboard}>
+            Dashboard
+          </Button>
         </ButtonBar>
       </Screen>
     )
@@ -146,7 +148,9 @@ const TallyScreen = (props: TallyScreenProps) => {
         </Main>
         <ButtonBar secondary naturalOrder separatePrimaryButton>
           <Brand>VxServer</Brand>
-          <Button onClick={goToDashboard}>Dashboard</Button>
+          <Button small onClick={goToDashboard}>
+            Dashboard
+          </Button>
         </ButtonBar>
       </Screen>
     )
