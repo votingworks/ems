@@ -58,6 +58,7 @@ const DashboardScreen = ({
   votesByPrecinct,
 }: Props) => {
   const [duplicateFiles, setDuplicateFiles] = useState<string[]>([])
+  const [errorFile, setErrorFile] = useState<string>('')
   const gotoTestDeck = () => {
     setCurrentScreen('testdeck')
   }
@@ -83,13 +84,19 @@ const DashboardScreen = ({
       if (isFileLoaded) {
         setDuplicateFiles(prevState => prevState.concat([file.name]))
       } else {
-        const castVoteRecords = parseCVRs(fileContent)
-        const precinctIds = unique(castVoteRecords.map(cvr => cvr._precinctId))
-        newCastVoteRecordFiles[fileMD5] = {
-          content: fileContent,
-          name: file.name,
-          count: fileContent.split('\n').filter(el => el).length,
-          precinctIds,
+        try {
+          const castVoteRecords = parseCVRs(fileContent)
+          const precinctIds = unique(
+            castVoteRecords.map(cvr => cvr._precinctId)
+          )
+          newCastVoteRecordFiles[fileMD5] = {
+            content: fileContent,
+            name: file.name,
+            count: fileContent.split('\n').filter(el => el).length,
+            precinctIds,
+          }
+        } catch (error) {
+          setErrorFile(file.name)
         }
       }
     }
@@ -214,6 +221,13 @@ const DashboardScreen = ({
                     ignored as duplicates of files already loaded.
                   </React.Fragment>
                 )}
+              </Text>
+            )}
+            {errorFile && (
+              <Text error>
+                There was an error reading the content of the file{' '}
+                <strong>{errorFile}</strong>. Please ensure this file only
+                contains CVR data.
               </Text>
             )}
             <p>
