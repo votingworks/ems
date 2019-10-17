@@ -164,6 +164,8 @@ const LoadElectionScreen = ({ setElection }: Props) => {
   }
 
   const resetUploadFiles = () => {
+    setInputFiles([])
+    setVxElectionFileIsInvalid(false)
     resetServerFiles()
     updateStatus()
   }
@@ -212,7 +214,9 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                   </p>
                 </FileField>
                 <Button
-                  disabled={!anyFilesExist(inputFiles)}
+                  disabled={
+                    !anyFilesExist(inputFiles) && !vxElectionFileIsInvalid
+                  }
                   small
                   onClick={resetUploadFiles}
                 >
