@@ -1,3 +1,4 @@
+import React from 'react'
 import styled, { css } from 'styled-components'
 
 interface Attrs extends HTMLButtonElement {
@@ -15,11 +16,13 @@ interface Props
   extends ButtonInterface,
     React.PropsWithoutRef<JSX.IntrinsicElements['button']> {}
 
-const buttonStyles = css<Props>`
+export const buttonStyles = css<Props>`
+  display: inline-block;
   border: none;
   border-radius: 0.25rem;
   box-sizing: border-box;
-  background: ${({ danger = false, primary = false }) =>
+  background: ${({ danger = false, disabled = false, primary = false }) =>
+    (disabled && 'rgb(211, 211, 211)') ||
     (danger && 'red') ||
     (primary && 'rgb(71, 167, 75)') ||
     'rgb(211, 211, 211)'};
@@ -29,7 +32,7 @@ const buttonStyles = css<Props>`
     small ? '0.35rem 0.5rem' : '0.75rem 1rem'};
   line-height: 1;
   white-space: nowrap;
-  color: ${({ disabled = false, danger = false, primary = false }) =>
+  color: ${({ danger = false, disabled = false, primary = false }) =>
     (disabled && 'rgb(169, 169, 169)') ||
     (danger && '#FFFFFF') ||
     (primary && '#FFFFFF') ||
@@ -40,7 +43,7 @@ export const DecoyButton = styled.div`
   ${buttonStyles} /* stylelint-disable-line value-keyword-case */
 `
 
-const Button = styled('button').attrs((props: Attrs) => ({
+const Button = styled.button.attrs((props: Attrs) => ({
   type: props.type || 'button',
 }))`
   ${buttonStyles} /* stylelint-disable-line value-keyword-case */

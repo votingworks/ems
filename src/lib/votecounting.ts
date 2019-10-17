@@ -20,51 +20,53 @@ const writeInCandidate: Candidate = {
   isWriteIn: true,
 }
 
-interface ParseCVRsParams {
-  election: Election
-  CVRsText: string
-}
-
-export function parseCVRs({
-  election,
-  CVRsText,
-}: ParseCVRsParams): VotesByPrecinct {
-  // CVRs are newline-separated JSON objects
-  const votesByPrecinct: VotesByPrecinct = {}
-
-  CVRsText.split('\n')
+// CVRs are newline-separated JSON objects
+export const parseCVRs = (castVoteRecords: string) =>
+  castVoteRecords
+    .split('\n')
     .filter(el => el) // remove empty lines
     .map(line => JSON.parse(line) as CastVoteRecord)
-    .forEach(CVR => {
-      const vote: VotesDict = {}
-      election.contests.forEach(contest => {
-        if (!CVR[contest.id]) {
-          return
-        }
 
-        if (contest.type === 'yesno') {
-          // the CVR is encoded the same way
-          vote[contest.id] = CVR[contest.id] as YesNoVote
-          return
-        }
+interface VotesByPrecinctParams {
+  election: Election
+  castVoteRecords: string
+}
 
-        if (contest.type === 'candidate') {
-          vote[contest.id] = (CVR[contest.id] as string[]).map(candidateId =>
-            find(
-              [writeInCandidate, ...contest.candidates],
-              c => c.id === candidateId
-            )
-          )
-        }
-      })
-
-      let votes = votesByPrecinct[CVR._precinctId]
-      if (!votes) {
-        votesByPrecinct[CVR._precinctId] = votes = []
+export function getVotesByPrecinct({
+  election,
+  castVoteRecords,
+}: VotesByPrecinctParams): VotesByPrecinct {
+  const votesByPrecinct: VotesByPrecinct = {}
+  parseCVRs(castVoteRecords).forEach(CVR => {
+    const vote: VotesDict = {}
+    election.contests.forEach(contest => {
+      if (!CVR[contest.id]) {
+        return
       }
 
-      votes.push(vote)
+      if (contest.type === 'yesno') {
+        // the CVR is encoded the same way
+        vote[contest.id] = CVR[contest.id] as YesNoVote
+        return
+      }
+
+      if (contest.type === 'candidate') {
+        vote[contest.id] = (CVR[contest.id] as string[]).map(candidateId =>
+          find(
+            [writeInCandidate, ...contest.candidates],
+            c => c.id === candidateId
+          )
+        )
+      }
     })
+
+    let votes = votesByPrecinct[CVR._precinctId]
+    if (!votes) {
+      votesByPrecinct[CVR._precinctId] = votes = []
+    }
+
+    votes.push(vote)
+  })
 
   return votesByPrecinct
 }

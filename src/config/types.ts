@@ -157,3 +157,15 @@ export interface ScreenProps {
   election: Election
   setCurrentScreen: SetScreenFunction
 }
+
+// Cast Vote Records
+export interface CastVoteRecordFile {
+  content: string
+  name: string
+  count: number
+  precinctIds: string[]
+}
+export type CastVoteRecordFilesDictionary = Dictionary<CastVoteRecordFile>
+export type SetCastVoteRecordFilesFunction = React.Dispatch<
+  React.SetStateAction<Dictionary<CastVoteRecordFile>>
+>
