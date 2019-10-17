@@ -171,7 +171,7 @@ export function fullTallyVotes({ election, votesByPrecinct }: FullTallyParams) {
   for (let precinctId in votesByPrecinct) {
     const votes = votesByPrecinct[precinctId]!
     precinctTallies[precinctId] = tallyVotes({ election, precinctId, votes })
-    allVotes = allVotes.concat(votes)
+    allVotes = [...allVotes, ...votes]
   }
 
   const overallTally = tallyVotes({ election, votes: allVotes })
