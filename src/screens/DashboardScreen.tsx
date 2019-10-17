@@ -27,7 +27,6 @@ import FileInputButton from '../components/FileInputButton'
 import Main, { MainChild } from '../components/Main'
 import MainNav from '../components/MainNav'
 import Prose from '../components/Prose'
-import ResultsProcessor from '../components/ResultsProcessor'
 import Screen from '../components/Screen'
 import Table, { TD } from '../components/Table'
 import Text from '../components/Text'
@@ -44,6 +43,7 @@ interface Props {
   setVotesByPrecinct: React.Dispatch<React.SetStateAction<VotesByPrecinct>>
   unconfigure: () => void
   votesByPrecinct: VotesByPrecinct
+  exportResults: () => void
 }
 
 const DashboardScreen = ({
@@ -56,6 +56,7 @@ const DashboardScreen = ({
   setVotesByPrecinct,
   unconfigure,
   votesByPrecinct,
+  exportResults,
 }: Props) => {
   const [duplicateFiles, setDuplicateFiles] = useState<string[]>([])
   const [errorFile, setErrorFile] = useState<string>('')
@@ -306,15 +307,12 @@ const DashboardScreen = ({
                 View Full Election Tally
               </Button>{' '}
               <Button
-                disabled // TODO: use this button instead of ResultsProcessor
-                // disabled={!hasCastVoteRecordFiles}
-                // onClick={tbd}
+                disabled={!hasCastVoteRecordFiles}
+                onClick={exportResults}
               >
                 Export SEMS Results File
               </Button>
             </p>
-            <hr />
-            <ResultsProcessor election={election} />
             <hr />
             <h1>Post-Election Actions</h1>
             <Button onClick={unconfigure}>Clear all election data</Button>
