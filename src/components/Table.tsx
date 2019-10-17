@@ -1,12 +1,17 @@
 import styled from 'styled-components'
 
-const Table = styled.table`
+interface Props {
+  striped?: boolean
+}
+
+const Table = styled.table<Props>`
   width: 100%;
   border-collapse: collapse;
   text-align: left;
   & th,
   & td {
-    border-bottom: 1px solid rgb(194, 200, 203);
+    border: 1px solid rgb(194, 200, 203);
+    border-width: 1px 0;
     padding: 0.25rem 0.5rem;
   }
   & th {
@@ -15,7 +20,7 @@ const Table = styled.table`
   }
   & tr:nth-child(2n - 1) {
     td {
-      background-color: rgb(222, 225, 227);
+      background-color: ${({ striped }) => striped && 'rgb(222, 225, 227)'};
     }
   }
   @media print {

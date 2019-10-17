@@ -5,6 +5,8 @@ import {
   CardData,
   FullElectionTally,
   OptionalElection,
+  CastVoteRecordFilesDictionary,
+  VotesByPrecinct,
 } from './config/types'
 
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
@@ -29,9 +31,13 @@ const App: React.FC = () => {
   const [fullElectionTally, setFullElectionTally] = useState<
     FullElectionTally | undefined
   >(undefined)
+  const [votesByPrecinct, setVotesByPrecinct] = useState<VotesByPrecinct>({})
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
   )
+  const [castVoteRecordFiles, setCastVoteRecordFiles] = useState<
+    CastVoteRecordFilesDictionary
+  >({})
 
   const unconfigure = () => {
     setElection(undefined)
@@ -154,11 +160,15 @@ const App: React.FC = () => {
     }
     return (
       <DashboardScreen
+        castVoteRecordFiles={castVoteRecordFiles}
         election={election}
         programCard={programCard}
+        setCastVoteRecordFiles={setCastVoteRecordFiles}
         setCurrentScreen={setCurrentScreen}
         setFullElectionTally={setFullElectionTally}
+        setVotesByPrecinct={setVotesByPrecinct}
         unconfigure={unconfigure}
+        votesByPrecinct={votesByPrecinct}
       />
     )
   }

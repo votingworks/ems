@@ -49,13 +49,17 @@
     ]
   },
   "dependencies": {
+    "@types/array-unique": "^0.3.0",
     "@types/jest": "24.0.11",
+    "@types/md5": "^2.1.33",
     "@types/node": "11.13.7",
     "@types/react": "16.8.14",
     "@types/react-dom": "16.8.4",
     "@types/styled-components": "^4.1.14",
+    "array-unique": "^0.3.2",
     "http-proxy-middleware": "^0.19.1",
     "js-file-download": "^0.4.5",
+    "md5": "^2.2.1",
     "normalize.css": "^8.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
