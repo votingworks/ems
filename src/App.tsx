@@ -25,22 +25,28 @@ import WritingCardScreen from './screens/WritingCardScreen'
 let loadingElection = false
 
 const App: React.FC = () => {
-  const [currentScreen, setCurrentScreen] = useState('')
-  const [isProgrammingCard, setIsProgrammingCard] = useState(false)
   const [cardReaderWorking, setCardReaderWorking] = useState(true)
-  const [fullElectionTally, setFullElectionTally] = useState<
-    FullElectionTally | undefined
-  >(undefined)
-  const [votesByPrecinct, setVotesByPrecinct] = useState<VotesByPrecinct>({})
-  const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
-    'election'
-  )
   const [castVoteRecordFiles, setCastVoteRecordFiles] = useState<
     CastVoteRecordFilesDictionary
   >({})
+  const [currentScreen, setCurrentScreen] = useState('')
+  const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
+    'election'
+  )
+  const [fullElectionTally, setFullElectionTally] = useState<
+    FullElectionTally | undefined
+  >(undefined)
+  const [isProgrammingCard, setIsProgrammingCard] = useState(false)
+  const [votesByPrecinct, setVotesByPrecinct] = useState<VotesByPrecinct>({})
 
   const unconfigure = () => {
+    setCardReaderWorking(false)
+    setCastVoteRecordFiles({})
+    setCurrentScreen('')
     setElection(undefined)
+    setFullElectionTally(undefined)
+    setIsProgrammingCard(false)
+    setVotesByPrecinct({})
     window.localStorage.clear()
   }
 
