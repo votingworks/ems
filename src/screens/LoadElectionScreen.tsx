@@ -46,7 +46,7 @@ interface Props {
 }
 
 const allFilesExist = (files: VxFile[]) => files.every(f => !!f.path)
-const anyFilesExist = (files: VxFile[]) => files.find(f => !!f.path)
+const anyFilesExist = (files: VxFile[]) => files.some(f => !!f.path)
 
 const LoadElectionScreen = ({ setElection }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
