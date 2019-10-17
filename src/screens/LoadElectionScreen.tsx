@@ -6,6 +6,7 @@ import Button from '../components/Button'
 import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
 import Screen from '../components/Screen'
+import readFileAsync from '../lib/readFileAsync'
 
 const FileField = styled.label`
   display: block;
@@ -23,6 +24,14 @@ const Loaded = styled.p`
   color: rgb(0, 128, 0);
   &::before {
     content: '✓ ';
+  }
+`
+
+const Invalid = styled.p`
+  min-height: 1.3333333rem;
+  color: rgb(128, 0, 0);
+  &::before {
+    content: '✘ ';
   }
 `
 
@@ -51,6 +60,7 @@ const anyFilesExist = (files: VxFile[]) => files.find(f => !!f.path)
 const LoadElectionScreen = ({ setElection }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [vxElectionFileIsInvalid, setVxElectionFileIsInvalid] = useState(false)
 
   const resetServerFiles = () => {
     fetch('/convert/reset', { method: 'post' }).catch(error => {
@@ -137,6 +147,22 @@ const LoadElectionScreen = ({ setElection }: Props) => {
     }
   }
 
+  const handleVxElectionFile = async (event: InputEvent) => {
+    const input = event.target as HTMLInputElement
+    const file = input.files && input.files[0]
+
+    if (file) {
+      const fileContent = await readFileAsync(file)
+      try {
+        setElection(JSON.parse(fileContent))
+        setVxElectionFileIsInvalid(false)
+      } catch (error) {
+        setVxElectionFileIsInvalid(true)
+        console.error('handleVxElectionFile failed', error) // eslint-disable-line no-console
+      }
+    }
+  }
+
   const resetUploadFiles = () => {
     resetServerFiles()
     updateStatus()
@@ -172,6 +198,19 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                     )}
                   </FileField>
                 ))}
+                <p>&ndash; or &ndash;</p>
+                <FileField key="vx-election" htmlFor="vx-election">
+                  <h3>Vx Election Definition</h3>
+                  {vxElectionFileIsInvalid && <Invalid>Invalid</Invalid>}
+                  <p>
+                    <input
+                      type="file"
+                      id="vx-election"
+                      name="vx-election"
+                      onChange={handleVxElectionFile}
+                    />
+                  </p>
+                </FileField>
                 <Button
                   disabled={!anyFilesExist(inputFiles)}
                   small
