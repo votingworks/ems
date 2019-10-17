@@ -107,7 +107,7 @@ export function tallyVotes({ election, precinctId, votes }: TallyParams) {
         return
       }
 
-      const optionTally = tallies.find(optionTally => {
+      const optionTally = find(tallies, optionTally => {
         if (contest.type === 'yesno') {
           return optionTally.option === selectedOption
         } else {
@@ -115,7 +115,7 @@ export function tallyVotes({ election, precinctId, votes }: TallyParams) {
           const selectedCandidateOption = selectedOption[0] as Candidate
           return candidateOption.id === selectedCandidateOption.id
         }
-      })!
+      })
       optionTally.tally += 1
     })
 

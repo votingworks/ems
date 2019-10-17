@@ -12,6 +12,7 @@ import Main, { MainChild } from '../components/Main'
 import Screen from '../components/Screen'
 
 import { filterTalliesByParty } from '../lib/votecounting'
+import find from '../utils/find'
 
 const FullTally = styled.div`
   page-break-before: always;
@@ -127,9 +128,10 @@ const TallyScreen = (props: TallyScreenProps) => {
                             <br />
                             <strong>Precinct:</strong>{' '}
                             {
-                              election.precincts.find(
-                                p => p.id === precinctTally.precinctId!
-                              )!.name
+                              find(
+                                election.precincts,
+                                p => p.id === precinctTally.precinctId
+                              ).name
                             }
                           </p>
                         </Prose>
