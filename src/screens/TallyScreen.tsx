@@ -104,7 +104,7 @@ const TallyScreen = (props: TallyScreenProps) => {
                 }`
 
                 return (
-                  <React.Fragment key={partyId}>
+                  <React.Fragment key={partyId || 'none'}>
                     <FullTally>
                       <Prose>
                         <h1>Full Election Tally</h1>
