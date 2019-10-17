@@ -140,12 +140,9 @@ export function filterTalliesByParty({
     return electionTally
   }
 
-  const districts = Array.prototype.concat.apply(
-    [],
-    election.ballotStyles
-      .filter(bs => bs.partyId === party.id)
-      .map(bs => bs.districts)
-  )
+  const districts = election.ballotStyles
+    .filter(bs => bs.partyId === party.id)
+    .flatMap(bs => bs.districts)
   const contestIds = election.contests
     .filter(
       contest =>
