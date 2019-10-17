@@ -1,3 +1,4 @@
+import fileDownload from 'js-file-download'
 import React, { useState } from 'react'
 
 import {
@@ -7,6 +8,7 @@ import {
   OptionalElection,
   CastVoteRecordFilesDictionary,
   VotesByPrecinct,
+  CastVoteRecordFile,
 } from './config/types'
 
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
@@ -21,6 +23,7 @@ import TallyScreen from './screens/TallyScreen'
 import 'normalize.css'
 import './App.css'
 import WritingCardScreen from './screens/WritingCardScreen'
+import ConversionClient from './lib/ConversionClient'
 
 let loadingElection = false
 
@@ -116,6 +119,39 @@ const App: React.FC = () => {
     }
   }
 
+  const exportResults = async () => {
+    // combine CVR data
+    const files = Object.values(castVoteRecordFiles) as CastVoteRecordFile[]
+    const cvrs = files.reduce(
+      (memo, file) =>
+        memo +
+        (!memo || memo.endsWith('\n') ? file.content : `\n${file.content}`),
+      ''
+    )
+
+    // process on the server
+    const client = new ConversionClient('/convert', 'results')
+    const { inputFiles, outputFiles } = await client.getFiles()
+    const [electionDefinitionFile, cvrFile] = inputFiles
+    const resultsFile = outputFiles[0]
+
+    await client.setInputFile(
+      electionDefinitionFile.name,
+      new File([JSON.stringify(election)], electionDefinitionFile.name, {
+        type: 'application/json',
+      })
+    )
+    await client.setInputFile(cvrFile.name, new File([cvrs], 'cvrs'))
+    await client.process()
+
+    // download the result
+    const results = await client.getOutputFile(resultsFile.name)
+    fileDownload(results, 'sems-results.csv', 'text/csv')
+
+    // reset server files
+    await client.reset()
+  }
+
   useInterval(
     () => {
       fetch('/card/read', { cache: 'no-store' })
@@ -175,6 +211,7 @@ const App: React.FC = () => {
         setVotesByPrecinct={setVotesByPrecinct}
         unconfigure={unconfigure}
         votesByPrecinct={votesByPrecinct}
+        exportResults={exportResults}
       />
     )
   }
