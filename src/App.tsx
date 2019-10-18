@@ -4,11 +4,11 @@ import React, { useState } from 'react'
 import {
   ButtonEvent,
   CardData,
+  CastVoteRecord,
   FullElectionTally,
   OptionalElection,
   CastVoteRecordFilesDictionary,
   VotesByPrecinct,
-  CastVoteRecordFile,
 } from './config/types'
 
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
@@ -29,6 +29,7 @@ let loadingElection = false
 
 const App: React.FC = () => {
   const [cardReaderWorking, setCardReaderWorking] = useState(true)
+  const [castVoteRecords, setCastVoteRecords] = useState<CastVoteRecord[]>([])
   const [castVoteRecordFiles, setCastVoteRecordFiles] = useState<
     CastVoteRecordFilesDictionary
   >({})
@@ -120,14 +121,9 @@ const App: React.FC = () => {
   }
 
   const exportResults = async () => {
-    // combine CVR data
-    const files = Object.values(castVoteRecordFiles) as CastVoteRecordFile[]
-    const cvrs = files.reduce(
-      (memo, file) =>
-        memo +
-        (!memo || memo.endsWith('\n') ? file.content : `\n${file.content}`),
-      ''
-    )
+    const CastVoteRecordsString = castVoteRecords
+      .map(c => JSON.stringify(c))
+      .join('\n')
 
     // process on the server
     const client = new ConverterClient('results')
@@ -141,7 +137,10 @@ const App: React.FC = () => {
         type: 'application/json',
       })
     )
-    await client.setInputFile(cvrFile.name, new File([cvrs], 'cvrs'))
+    await client.setInputFile(
+      cvrFile.name,
+      new File([CastVoteRecordsString], 'cvrs')
+    )
     await client.process()
 
     // download the result
@@ -203,9 +202,11 @@ const App: React.FC = () => {
     return (
       <DashboardScreen
         castVoteRecordFiles={castVoteRecordFiles}
+        castVoteRecords={castVoteRecords}
         election={election}
         programCard={programCard}
         setCastVoteRecordFiles={setCastVoteRecordFiles}
+        setCastVoteRecords={setCastVoteRecords}
         setCurrentScreen={setCurrentScreen}
         setFullElectionTally={setFullElectionTally}
         setVotesByPrecinct={setVotesByPrecinct}
