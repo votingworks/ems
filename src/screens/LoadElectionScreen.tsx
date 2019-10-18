@@ -128,10 +128,10 @@ const LoadElectionScreen = ({ setElection }: Props) => {
     const file = input.files && input.files[0]
 
     if (file) {
-      const fileContent = await readFileAsync(file)
+      setVxElectionFileIsInvalid(false)
       try {
+        const fileContent = await readFileAsync(file)
         setElection(JSON.parse(fileContent))
-        setVxElectionFileIsInvalid(false)
       } catch (error) {
         setVxElectionFileIsInvalid(true)
         console.error('handleVxElectionFile failed', error) // eslint-disable-line no-console
