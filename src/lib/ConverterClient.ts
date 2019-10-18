@@ -8,13 +8,11 @@ export interface VxFiles {
   outputFiles: VxFile[]
 }
 
-export default class ConversionClient {
-  private readonly baseURL: string
-  private readonly id: string
+export default class ConverterClient {
+  private readonly target: string
 
-  public constructor(baseURL: string, id: string) {
-    this.baseURL = baseURL
-    this.id = id
+  public constructor(target: string) {
+    this.target = target
   }
 
   public async setInputFile(name: string, content: File): Promise<void> {
@@ -22,7 +20,7 @@ export default class ConversionClient {
     formData.append('name', name)
     formData.append('file', content)
 
-    const response = await fetch(this.url('submitfile'), {
+    const response = await fetch(`/convert/${this.target}/submitfile`, {
       method: 'POST',
       body: formData,
     })
@@ -36,7 +34,9 @@ export default class ConversionClient {
   }
 
   public async process(): Promise<void> {
-    const response = await fetch(this.url('process'), { method: 'POST' })
+    const response = await fetch(`/convert/${this.target}/process`, {
+      method: 'POST',
+    })
     const result = await response.json()
 
     if (result.status !== 'ok') {
@@ -46,26 +46,20 @@ export default class ConversionClient {
 
   public async getOutputFile(name: string): Promise<Blob> {
     const response = await fetch(
-      this.url(`output?name=${encodeURIComponent(name)}`),
+      `/convert/${this.target}/output?name=${encodeURIComponent(name)}`,
       { cache: 'no-store' }
     )
     return await response.blob()
   }
 
   public async getFiles(): Promise<VxFiles> {
-    const response = await fetch(this.url('files'), { cache: 'no-store' })
+    const response = await fetch(`/convert/${this.target}/files`, {
+      cache: 'no-store',
+    })
     return await response.json()
   }
 
-  private url(path: string): string {
-    if (path.startsWith('/')) {
-      return `${this.baseURL}${path}`
-    }
-
-    return `${this.baseURL}/${this.id}/${path}`
-  }
-
   public async reset(): Promise<void> {
-    await fetch(this.url('/reset'), { method: 'POST' })
+    await fetch(`/convert/reset`, { method: 'POST' })
   }
 }

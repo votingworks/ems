@@ -7,7 +7,7 @@ import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
 import Screen from '../components/Screen'
 import readFileAsync from '../lib/readFileAsync'
-import ConversionClient, { VxFile } from '../lib/ConversionClient'
+import ConverterClient, { VxFile } from '../lib/ConverterClient'
 
 const FileField = styled.label`
   display: block;
@@ -52,7 +52,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [vxElectionFileIsInvalid, setVxElectionFileIsInvalid] = useState(false)
-  const [client] = useState(new ConversionClient('/convert', 'election'))
+  const [client] = useState(new ConverterClient('election'))
 
   const resetServerFiles = async () => {
     try {

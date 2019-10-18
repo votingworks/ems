@@ -23,7 +23,7 @@ import TallyScreen from './screens/TallyScreen'
 import 'normalize.css'
 import './App.css'
 import WritingCardScreen from './screens/WritingCardScreen'
-import ConversionClient from './lib/ConversionClient'
+import ConverterClient from './lib/ConverterClient'
 
 let loadingElection = false
 
@@ -130,7 +130,7 @@ const App: React.FC = () => {
     )
 
     // process on the server
-    const client = new ConversionClient('/convert', 'results')
+    const client = new ConverterClient('results')
     const { inputFiles, outputFiles } = await client.getFiles()
     const [electionDefinitionFile, cvrFile] = inputFiles
     const resultsFile = outputFiles[0]
