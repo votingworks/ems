@@ -163,7 +163,6 @@ export interface ScreenProps {
 
 // Cast Vote Records
 export interface CastVoteRecordFile {
-  content: string
   name: string
   count: number
   precinctIds: string[]

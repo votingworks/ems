@@ -14,6 +14,7 @@ import {
   SetScreenFunction,
   VotesByPrecinct,
   InputEventFunction,
+  CastVoteRecord,
 } from '../config/types'
 
 import {
@@ -34,9 +35,11 @@ import HorizontalRule from '../components/HorizontalRule'
 
 interface Props {
   castVoteRecordFiles: CastVoteRecordFilesDictionary
+  castVoteRecords: CastVoteRecord[]
   election: Election
   programCard: ButtonEventFunction
   setCastVoteRecordFiles: SetCastVoteRecordFilesFunction
+  setCastVoteRecords: React.Dispatch<React.SetStateAction<CastVoteRecord[]>>
   setCurrentScreen: SetScreenFunction
   setFullElectionTally: React.Dispatch<
     React.SetStateAction<FullElectionTally | undefined>
@@ -49,9 +52,11 @@ interface Props {
 
 const DashboardScreen = ({
   castVoteRecordFiles,
+  castVoteRecords,
   election,
   programCard,
   setCastVoteRecordFiles,
+  setCastVoteRecords,
   setCurrentScreen,
   setFullElectionTally,
   setVotesByPrecinct,
@@ -77,6 +82,7 @@ const DashboardScreen = ({
     setDuplicateFiles([])
     const input = event.currentTarget
     const files = Array.from(input.files || [])
+    let newCastVoteRecords: CastVoteRecord[] = []
     const newCastVoteRecordFiles = { ...castVoteRecordFiles }
     for (const file of files) {
       const fileContent = await readFileAsync(file)
@@ -87,27 +93,34 @@ const DashboardScreen = ({
         setDuplicateFiles(prevState => prevState.concat([file.name]))
       } else {
         try {
-          const castVoteRecords = parseCVRs(fileContent)
+          const fileCastVoteRecords = parseCVRs(fileContent)
           const precinctIds = unique(
-            castVoteRecords.map(cvr => cvr._precinctId)
+            fileCastVoteRecords.map(cvr => cvr._precinctId)
           )
           newCastVoteRecordFiles[fileMD5] = {
-            content: fileContent,
             name: file.name,
             count: fileContent.split('\n').filter(el => el).length,
             precinctIds,
           }
+          newCastVoteRecords = newCastVoteRecords.concat(fileCastVoteRecords)
         } catch (error) {
           setErrorFile(file.name)
         }
       }
     }
+    const uniqueCastVoteRecords = newCastVoteRecords.reduce((cvrs, cvr) => {
+      if (cvrs.findIndex(c => c._ballotId === cvr._ballotId) === -1) {
+        cvrs.push(cvr)
+      }
+      return cvrs
+    }, castVoteRecords)
+    setCastVoteRecords(uniqueCastVoteRecords)
     setCastVoteRecordFiles(newCastVoteRecordFiles)
     input.value = ''
-    const castVoteRecords = Object.values(newCastVoteRecordFiles)
-      .map(file => file!.content)
-      .join('\n')
-    const vbp = getVotesByPrecinct({ election, castVoteRecords })
+    const vbp = getVotesByPrecinct({
+      election,
+      castVoteRecords: uniqueCastVoteRecords,
+    })
     setVotesByPrecinct(vbp)
     const ft = fullTallyVotes({ election, votesByPrecinct: vbp })
     setFullElectionTally(ft)
