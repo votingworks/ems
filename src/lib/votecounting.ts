@@ -107,7 +107,7 @@ export function tallyVotes({ election, precinctId, votes }: TallyParams) {
         return
       }
 
-      const optionTally = tallies.find(optionTally => {
+      const optionTally = find(tallies, optionTally => {
         if (contest.type === 'yesno') {
           return optionTally.option === selectedOption
         } else {
@@ -115,7 +115,7 @@ export function tallyVotes({ election, precinctId, votes }: TallyParams) {
           const selectedCandidateOption = selectedOption[0] as Candidate
           return candidateOption.id === selectedCandidateOption.id
         }
-      })!
+      })
       optionTally.tally += 1
     })
 
@@ -140,12 +140,9 @@ export function filterTalliesByParty({
     return electionTally
   }
 
-  const districts = Array.prototype.concat.apply(
-    [],
-    election.ballotStyles
-      .filter(bs => bs.partyId === party.id)
-      .map(bs => bs.districts)
-  )
+  const districts = election.ballotStyles
+    .filter(bs => bs.partyId === party.id)
+    .flatMap(bs => bs.districts)
   const contestIds = election.contests
     .filter(
       contest =>
@@ -174,7 +171,7 @@ export function fullTallyVotes({ election, votesByPrecinct }: FullTallyParams) {
   for (let precinctId in votesByPrecinct) {
     const votes = votesByPrecinct[precinctId]!
     precinctTallies[precinctId] = tallyVotes({ election, precinctId, votes })
-    allVotes = allVotes.concat(votes)
+    allVotes = [...allVotes, ...votes]
   }
 
   const overallTally = tallyVotes({ election, votes: allVotes })

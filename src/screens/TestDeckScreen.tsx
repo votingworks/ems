@@ -20,6 +20,7 @@ import Main, { MainChild } from '../components/Main'
 import Screen from '../components/Screen'
 
 import { filterTalliesByParty, tallyVotes } from '../lib/votecounting'
+import find from '../utils/find'
 
 const ElectionTallyReport = styled.div`
   page-break-before: always;
@@ -41,7 +42,7 @@ const generateTestDeckBallots = ({
   let votes: VotesDict[] = []
 
   precincts.forEach(precinctId => {
-    const precinct = election.precincts.find(p => p.id === precinctId)!
+    const precinct = find(election.precincts, p => p.id === precinctId)
     const precinctBallotStyles = election.ballotStyles.filter(bs =>
       bs.precincts.includes(precinct.id)
     )

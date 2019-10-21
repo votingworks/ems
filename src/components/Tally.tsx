@@ -23,10 +23,7 @@ const Tally = ({ election, electionTally }: Props) => {
   const ballotStyles = precinctId
     ? election.ballotStyles.filter(bs => bs.precincts.includes(precinctId))
     : []
-  const districts = Array.prototype.concat.apply(
-    [],
-    ballotStyles.map(bs => bs.districts)
-  )
+  const districts = ballotStyles.flatMap(bs => bs.districts)
 
   return (
     <React.Fragment>

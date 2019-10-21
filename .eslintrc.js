@@ -1,6 +1,6 @@
 const jsExtensions = ['.js', '.jsx']
 const tsExtensions = ['.ts', '.tsx']
-const allExtensions = jsExtensions.concat(tsExtensions)
+const allExtensions = [...jsExtensions, ...tsExtensions]
 
 module.exports = {
   env: {

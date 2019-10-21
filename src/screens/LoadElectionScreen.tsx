@@ -46,7 +46,7 @@ interface Props {
 }
 
 const allFilesExist = (files: VxFile[]) => files.every(f => !!f.path)
-const anyFilesExist = (files: VxFile[]) => files.find(f => !!f.path)
+const someFilesExist = (files: VxFile[]) => files.some(f => !!f.path)
 
 const LoadElectionScreen = ({ setElection }: Props) => {
   const [inputFiles, setInputFiles] = useState<VxFile[]>([])
@@ -193,7 +193,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                 </FileField>
                 <Button
                   disabled={
-                    !anyFilesExist(inputFiles) && !vxElectionFileIsInvalid
+                    !someFilesExist(inputFiles) && !vxElectionFileIsInvalid
                   }
                   small
                   onClick={resetUploadFiles}
