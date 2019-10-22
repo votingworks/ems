@@ -3,10 +3,8 @@ import React, { useState } from 'react'
 
 import {
   CardData,
-  CastVoteRecord,
   FullElectionTally,
   OptionalElection,
-  CastVoteRecordFilesDictionary,
   VotesByPrecinct,
   ButtonEventFunction,
 } from './config/types'
@@ -24,15 +22,15 @@ import 'normalize.css'
 import './App.css'
 import WritingCardScreen from './screens/WritingCardScreen'
 import ConverterClient from './lib/ConverterClient'
+import CastVoteRecordFiles from './utils/CastVoteRecordFiles'
 
 let loadingElection = false
 
 const App: React.FC = () => {
   const [cardReaderWorking, setCardReaderWorking] = useState(true)
-  const [castVoteRecords, setCastVoteRecords] = useState<CastVoteRecord[]>([])
-  const [castVoteRecordFiles, setCastVoteRecordFiles] = useState<
-    CastVoteRecordFilesDictionary
-  >({})
+  const [castVoteRecordFiles, setCastVoteRecordFiles] = useState(
+    CastVoteRecordFiles.empty
+  )
   const [currentScreen, setCurrentScreen] = useState('')
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
@@ -45,7 +43,7 @@ const App: React.FC = () => {
 
   const unconfigure = () => {
     setCardReaderWorking(false)
-    setCastVoteRecordFiles({})
+    setCastVoteRecordFiles(CastVoteRecordFiles.empty)
     setCurrentScreen('')
     setElection(undefined)
     setFullElectionTally(undefined)
@@ -121,7 +119,7 @@ const App: React.FC = () => {
   }
 
   const exportResults = async () => {
-    const CastVoteRecordsString = castVoteRecords
+    const CastVoteRecordsString = castVoteRecordFiles.castVoteRecords
       .map(c => JSON.stringify(c))
       .join('\n')
 
@@ -202,11 +200,9 @@ const App: React.FC = () => {
     return (
       <DashboardScreen
         castVoteRecordFiles={castVoteRecordFiles}
-        castVoteRecords={castVoteRecords}
         election={election}
         programCard={programCard}
         setCastVoteRecordFiles={setCastVoteRecordFiles}
-        setCastVoteRecords={setCastVoteRecords}
         setCurrentScreen={setCurrentScreen}
         setFullElectionTally={setFullElectionTally}
         setVotesByPrecinct={setVotesByPrecinct}
