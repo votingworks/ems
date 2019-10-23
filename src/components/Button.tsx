@@ -37,6 +37,13 @@ export const buttonStyles = css<Props>`
     (danger && '#FFFFFF') ||
     (primary && '#FFFFFF') ||
     'black'};
+  &:focus {
+    outline: rgb(77, 144, 254) dashed 0.25rem;
+  }
+  &:hover,
+  &:active {
+    outline: none;
+  }
 `
 
 export const DecoyButton = styled.div`
