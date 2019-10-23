@@ -63,14 +63,12 @@ const DashboardScreen = ({
   }
 
   const processCastVoteRecordFiles: InputEventFunction = async event => {
-    // incorporate new CVR
     const input = event.currentTarget
     const files = Array.from(input.files || [])
     const newCastVoteRecordFiles = await castVoteRecordFiles.addAll(files)
 
     setCastVoteRecordFiles(newCastVoteRecordFiles)
 
-    // tally votes
     const vbp = getVotesByPrecinct({
       election,
       castVoteRecords: newCastVoteRecordFiles.castVoteRecords,
@@ -80,7 +78,6 @@ const DashboardScreen = ({
     const ft = fullTallyVotes({ election, votesByPrecinct: vbp })
     setFullElectionTally(ft)
 
-    // reset input
     input.value = ''
   }
 
