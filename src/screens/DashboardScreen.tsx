@@ -10,10 +10,10 @@ import {
   CastVoteRecordFilesDictionary,
   Election,
   FullElectionTally,
-  InputEvent,
   SetCastVoteRecordFilesFunction,
   SetScreenFunction,
   VotesByPrecinct,
+  InputEventFunction,
 } from '../config/types'
 
 import {
@@ -72,9 +72,9 @@ const DashboardScreen = ({
     setCurrentScreen('tally')
   }
 
-  const processCastVoteRecordFiles = async (event: InputEvent) => {
+  const processCastVoteRecordFiles: InputEventFunction = async event => {
     setDuplicateFiles([])
-    const input = event.currentTarget as HTMLInputElement
+    const input = event.currentTarget
     const files = Array.from(input.files || [])
     const newCastVoteRecordFiles = { ...castVoteRecordFiles }
     for (const file of files) {

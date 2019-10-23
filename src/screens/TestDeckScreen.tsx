@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import {
-  ButtonEvent,
   CandidateContest,
   Election,
   ElectionTally,
   ScreenProps,
   VotesDict,
+  ButtonEventFunction,
 } from '../config/types'
 
 import Brand from '../components/Brand'
@@ -95,8 +95,8 @@ const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
 
   const [precinct, setPrecinct] = useState<Precinct>(initialPrecinct)
 
-  const selectPrecinct = (event: ButtonEvent) => {
-    const { id = '', name = '' } = (event.target as HTMLElement).dataset
+  const selectPrecinct: ButtonEventFunction = event => {
+    const { id = '', name = '' } = event.currentTarget.dataset
     setPrecinct({ id, name })
     const precinctId = id || undefined
     const votes = generateTestDeckBallots({ election, precinctId })

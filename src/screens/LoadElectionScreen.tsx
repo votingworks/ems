@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { InputEvent, SetElection } from '../config/types'
+import { SetElection, InputEventFunction } from '../config/types'
 
 import Button from '../components/Button'
 import Main, { MainChild } from '../components/Main'
@@ -114,8 +114,8 @@ const LoadElectionScreen = ({ setElection }: Props) => {
     }
   }
 
-  const handleFileInput = async (event: InputEvent) => {
-    const input = event.target as HTMLInputElement
+  const handleFileInput: InputEventFunction = async event => {
+    const input = event.currentTarget
     const file = input.files && input.files[0]
     const name = input.name
     if (file && name) {
@@ -123,8 +123,8 @@ const LoadElectionScreen = ({ setElection }: Props) => {
     }
   }
 
-  const handleVxElectionFile = async (event: InputEvent) => {
-    const input = event.target as HTMLInputElement
+  const handleVxElectionFile: InputEventFunction = async event => {
+    const input = event.currentTarget
     const file = input.files && input.files[0]
 
     if (file) {
