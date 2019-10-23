@@ -2,13 +2,13 @@ import fileDownload from 'js-file-download'
 import React, { useState } from 'react'
 
 import {
-  ButtonEvent,
   CardData,
   FullElectionTally,
   OptionalElection,
   CastVoteRecordFilesDictionary,
   VotesByPrecinct,
   CastVoteRecordFile,
+  ButtonEventFunction,
 } from './config/types'
 
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
@@ -53,8 +53,8 @@ const App: React.FC = () => {
     window.localStorage.clear()
   }
 
-  const programCard = async (event: ButtonEvent) => {
-    const id = (event.target as HTMLElement).dataset.id
+  const programCard: ButtonEventFunction = async event => {
+    const id = event.currentTarget.dataset.id
     setIsProgrammingCard(true)
 
     if (id === 'override') {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { BallotStyle, ButtonEvent, ScreenProps } from '../config/types'
+import { BallotStyle, ButtonEventFunction, ScreenProps } from '../config/types'
 
 import Brand from '../components/Brand'
 import Button from '../components/Button'
@@ -15,8 +15,8 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
     undefined
   )
 
-  const selectBallotStyle = (event: ButtonEvent) => {
-    const { id = '' } = (event.target as HTMLElement).dataset
+  const selectBallotStyle: ButtonEventFunction = event => {
+    const { id = '' } = event.currentTarget.dataset
     setBallotStyle(election.ballotStyles.find(bs => bs.id === id))
   }
 
