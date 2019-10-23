@@ -40,15 +40,6 @@ img {
   color: rgb(0, 0, 238);
 }
 
-:focus {
-  outline: rgb(77, 144, 254) dashed 0.25rem;
-}
-
-:hover,
-:active {
-  outline: none; /* Hide focus outline when using mouse/touch. */
-}
-
 /* Foundational */
 html,
 body,

@@ -234,6 +234,7 @@ const DashboardScreen = ({
             <p>
               <FileInputButton
                 accept="text/plain"
+                id="load-cvrs"
                 multiple
                 onChange={processCastVoteRecordFiles}
               >
