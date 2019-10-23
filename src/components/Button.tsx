@@ -42,7 +42,7 @@ export const buttonStyles = css<Props>`
     (primary && '#FFFFFF') ||
     'black'};
   &:focus {
-    ${buttonFocusStyle} /* stylelint-disable-line value-keyword-case */
+    ${buttonFocusStyle}
   }
   &:hover,
   &:active {
@@ -51,17 +51,17 @@ export const buttonStyles = css<Props>`
 `
 
 export const DecoyButton = styled.div`
-  ${buttonStyles} /* stylelint-disable-line value-keyword-case */
+  ${buttonStyles}
 `
 
 const Button = styled.button.attrs(({ type = 'button' }: Attrs) => ({
   type,
 }))`
-  ${buttonStyles} /* stylelint-disable-line value-keyword-case */
+  ${buttonStyles}
 `
 
 export const LabelButton = styled.label`
-  ${buttonStyles} /* stylelint-disable-line value-keyword-case */
+  ${buttonStyles}
 `
 
 export default Button

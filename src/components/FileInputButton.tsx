@@ -21,7 +21,7 @@ const HiddenFileInput = styled.input`
   height: 0.1px;
   overflow: hidden;
   &:focus + label {
-    ${buttonFocusStyle} /* stylelint-disable-line value-keyword-case */
+    ${buttonFocusStyle}
   }
   &:hover + label,
   &:active + label {
