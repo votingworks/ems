@@ -2,34 +2,25 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { SetElection, InputEventFunction } from '../config/types'
 
+import ConverterClient, { VxFile } from '../lib/ConverterClient'
+import readFileAsync from '../lib/readFileAsync'
+
 import Button from '../components/Button'
+import FileInputButton from '../components/FileInputButton'
+import HorizontalRule from '../components/HorizontalRule'
 import Main, { MainChild } from '../components/Main'
 import Prose from '../components/Prose'
 import Screen from '../components/Screen'
-import readFileAsync from '../lib/readFileAsync'
-import ConverterClient, { VxFile } from '../lib/ConverterClient'
-
-const FileField = styled.label`
-  display: block;
-  margin-bottom: 1rem;
-  & > strong {
-    display: block;
-  }
-  & > input {
-    width: 100%;
-  }
-`
 
 const Loaded = styled.p`
-  min-height: 1.3333333rem;
+  line-height: 2.5rem;
   color: rgb(0, 128, 0);
   &::before {
     content: '✓ ';
   }
 `
-
 const Invalid = styled.p`
-  min-height: 1.3333333rem;
+  line-height: 2.5rem;
   color: rgb(128, 0, 0);
   &::before {
     content: '✘ ';
@@ -154,52 +145,60 @@ const LoadElectionScreen = ({ setElection }: Props) => {
     <Screen>
       <Main>
         <MainChild center>
-          <Prose>
+          <Prose textCenter>
             {isLoading ? (
               <h1>Loading…</h1>
             ) : (
               <React.Fragment>
                 <h1>Configure VxServer</h1>
-                <p>Load the following files from a USB drive, etc.</p>
-                {inputFiles.map((file: VxFile, i: number) => (
-                  <FileField key={file.name} htmlFor={`f${i}`}>
-                    <h3>{file.name}</h3>
-                    {file.path ? (
-                      <Loaded>Loaded</Loaded>
-                    ) : (
-                      <p>
-                        <input
-                          type="file"
-                          id={`f${i}`}
-                          name={file.name}
-                          onChange={handleFileInput}
-                        />
-                      </p>
-                    )}
-                  </FileField>
-                ))}
-                <p>— or —</p>
-                <FileField key="vx-election" htmlFor="vx-election">
-                  <h3>Vx Election Definition</h3>
-                  {vxElectionFileIsInvalid && <Invalid>Invalid</Invalid>}
-                  <p>
-                    <input
-                      type="file"
-                      id="vx-election"
-                      name="vx-election"
-                      onChange={handleVxElectionFile}
-                    />
-                  </p>
-                </FileField>
-                <Button
-                  disabled={
-                    !someFilesExist(inputFiles) && !vxElectionFileIsInvalid
-                  }
-                  small
-                  onClick={resetUploadFiles}
-                >
-                  Reset Files
-                </Button>
+                <p>Select the following files from a USB drive, etc.</p>
+                <HorizontalRule />
+                {inputFiles.map((file: VxFile, i: number) =>
+                  file.path ? (
+                    <Loaded key={file.name}>{`Loaded ${file.name}`}</Loaded>
+                  ) : (
+                    <p key={file.name}>
+                      <FileInputButton
+                        buttonProps={{
+                          fullWidth: true,
+                        }}
+                        id={`f${i}`}
+                        name={file.name}
+                        onChange={handleFileInput}
+                      >
+                        {file.name}
+                      </FileInputButton>
+                    </p>
+                  )
+                )}
+                <HorizontalRule>or</HorizontalRule>
+                {vxElectionFileIsInvalid && (
+                  <Invalid>Invalid Vx Election Definition file.</Invalid>
+                )}
+                <p>
+                  <FileInputButton
+                    buttonProps={{
+                      fullWidth: true,
+                    }}
+                    id="vx-election"
+                    name="vx-election"
+                    onChange={handleVxElectionFile}
+                  >
+                    Vx Election Definition file
+                  </FileInputButton>
+                </p>
+                <HorizontalRule />
+                <p>
+                  <Button
+                    disabled={
+                      !someFilesExist(inputFiles) && !vxElectionFileIsInvalid
+                    }
+                    small
+                    onClick={resetUploadFiles}
+                  >
+                    Reset Files
+                  </Button>
+                </p>
               </React.Fragment>
             )}
           </Prose>
