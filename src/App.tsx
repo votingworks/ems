@@ -170,47 +170,46 @@ const App: React.FC = () => {
     if (isProgrammingCard) {
       return <WritingCardScreen />
     }
-    if (currentScreen) {
-      switch (currentScreen) {
-        case 'tally':
-          return (
-            <TallyScreen
-              election={election}
-              setCurrentScreen={setCurrentScreen}
-              fullElectionTally={fullElectionTally}
-            />
-          )
-        case 'testdeck':
-          return (
-            <TestDeckScreen
-              election={election}
-              setCurrentScreen={setCurrentScreen}
-            />
-          )
-        case 'ballotproofing':
-          return (
-            <BallotProofingScreen
-              election={election}
-              setCurrentScreen={setCurrentScreen}
-            />
-          )
-        default:
-      }
+    switch (currentScreen) {
+      case 'tally':
+        return (
+          <TallyScreen
+            election={election}
+            setCurrentScreen={setCurrentScreen}
+            fullElectionTally={fullElectionTally}
+          />
+        )
+      case 'testdeck':
+        return (
+          <TestDeckScreen
+            election={election}
+            setCurrentScreen={setCurrentScreen}
+          />
+        )
+      case 'ballotproofing':
+        return (
+          <BallotProofingScreen
+            election={election}
+            setCurrentScreen={setCurrentScreen}
+          />
+        )
+      case 'dashboard':
+      default:
+        return (
+          <DashboardScreen
+            castVoteRecordFiles={castVoteRecordFiles}
+            election={election}
+            programCard={programCard}
+            setCastVoteRecordFiles={setCastVoteRecordFiles}
+            setCurrentScreen={setCurrentScreen}
+            setFullElectionTally={setFullElectionTally}
+            setVotesByPrecinct={setVotesByPrecinct}
+            unconfigure={unconfigure}
+            votesByPrecinct={votesByPrecinct}
+            exportResults={exportResults}
+          />
+        )
     }
-    return (
-      <DashboardScreen
-        castVoteRecordFiles={castVoteRecordFiles}
-        election={election}
-        programCard={programCard}
-        setCastVoteRecordFiles={setCastVoteRecordFiles}
-        setCurrentScreen={setCurrentScreen}
-        setFullElectionTally={setFullElectionTally}
-        setVotesByPrecinct={setVotesByPrecinct}
-        unconfigure={unconfigure}
-        votesByPrecinct={votesByPrecinct}
-        exportResults={exportResults}
-      />
-    )
   }
 
   return <LoadElectionScreen setElection={setElection} />
