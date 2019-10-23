@@ -30,6 +30,7 @@ import Prose from '../components/Prose'
 import Screen from '../components/Screen'
 import Table, { TD } from '../components/Table'
 import Text from '../components/Text'
+import HorizontalRule from '../components/HorizontalRule'
 
 interface Props {
   castVoteRecordFiles: CastVoteRecordFilesDictionary
@@ -157,7 +158,7 @@ const DashboardScreen = ({
                 Override Write Protection
               </Button>
             </p>
-            <hr />
+            <HorizontalRule />
             <h1>Election Day Actions</h1>
             <h2>Cast Vote Record (CVR) files</h2>
             <Table>
@@ -233,7 +234,6 @@ const DashboardScreen = ({
             )}
             <p>
               <FileInputButton
-                accept="text/plain"
                 id="load-cvrs"
                 multiple
                 onChange={processCastVoteRecordFiles}
@@ -314,7 +314,7 @@ const DashboardScreen = ({
                 Export SEMS Results File
               </Button>
             </p>
-            <hr />
+            <HorizontalRule />
             <h1>Post-Election Actions</h1>
             <Button onClick={unconfigure}>Clear all election data</Button>
           </Prose>

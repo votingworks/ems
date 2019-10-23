@@ -26,11 +26,15 @@ const Prose = styled('div')<Props>`
     margin: ${({ compact }) => (compact ? 0 : '2rem 0 0.75rem')};
     font-size: 1.25rem;
   }
+  & h3 {
+    font-size: 1rem;
+  }
   & h3,
-  & p,
   & table {
     margin: ${({ compact }) => (compact ? 0 : '1rem 0')};
-    font-size: 1rem;
+  }
+  & p {
+    margin: ${({ compact }) => (compact ? 0 : undefined)};
   }
   & h1 + p,
   & h2 + p {

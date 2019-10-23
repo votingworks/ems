@@ -9,6 +9,7 @@ import ButtonList from '../components/ButtonList'
 import Prose from '../components/Prose'
 import Main, { MainChild } from '../components/Main'
 import Screen from '../components/Screen'
+import HorizontalRule from '../components/HorizontalRule'
 
 const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
   const [ballotStyle, setBallotStyle] = useState<BallotStyle | undefined>(
@@ -40,7 +41,7 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
                   Contest titles and choices for ballot style{' '}
                   <strong>{ballotStyle.id}</strong>.
                 </p>
-                <hr />
+                <HorizontalRule />
                 {election.contests
                   .filter(
                     contest =>
@@ -64,7 +65,7 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
                       )}
                     </React.Fragment>
                   ))}
-                <hr />
+                <HorizontalRule />
                 <p>End of ballot style “{ballotStyle.id}”</p>
               </Prose>
             </React.Fragment>

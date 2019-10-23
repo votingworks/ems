@@ -3,15 +3,7 @@ import styled from 'styled-components'
 
 import { InputEventFunction } from '../config/types'
 
-import { LabelButton, buttonFocusStyle } from './Button'
-
-interface Props {
-  accept?: string
-  children: React.ReactNode
-  id: string
-  multiple?: boolean
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
+import { LabelButton, buttonFocusStyle, Props as ButtonProps } from './Button'
 
 const HiddenFileInput = styled.input`
   position: absolute;
@@ -29,12 +21,22 @@ const HiddenFileInput = styled.input`
   }
 `
 
+type HiddenFileInputProps = Parameters<typeof HiddenFileInput>[0]
+
+interface Props extends HiddenFileInputProps {
+  buttonProps?: ButtonProps
+  children: string
+  id: string
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
 const FileInputButton = ({
-  accept,
+  accept = 'text/plain',
+  buttonProps,
   children,
   id,
-  multiple,
   onChange,
+  ...rest
 }: Props) => {
   const onBlur: InputEventFunction = event => {
     const input = event.currentTarget
@@ -43,14 +45,16 @@ const FileInputButton = ({
   return (
     <React.Fragment>
       <HiddenFileInput
+        {...rest}
         accept={accept}
         id={id}
-        multiple={multiple}
-        onChange={onChange}
         onBlur={onBlur}
+        onChange={onChange}
         type="file"
       />
-      <LabelButton htmlFor={id}>{children}</LabelButton>
+      <LabelButton htmlFor={id} {...buttonProps}>
+        {children}
+      </LabelButton>
     </React.Fragment>
   )
 }

@@ -5,22 +5,22 @@ interface Attrs extends HTMLButtonElement {
   readonly type: string
 }
 
-export interface ButtonInterface {
+export interface Props {
   readonly danger?: boolean
   readonly primary?: boolean
   readonly fullWidth?: boolean
   readonly small?: boolean
 }
 
-interface Props
-  extends ButtonInterface,
+interface ButtonProps
+  extends Props,
     React.PropsWithoutRef<JSX.IntrinsicElements['button']> {}
 
 export const buttonFocusStyle = css`
   outline: rgb(77, 144, 254) dashed 0.25rem;
 `
 
-export const buttonStyles = css<Props>`
+export const buttonStyles = css<ButtonProps>`
   display: inline-block;
   border: none;
   border-radius: 0.25rem;

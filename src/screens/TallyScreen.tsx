@@ -13,6 +13,7 @@ import Screen from '../components/Screen'
 
 import { filterTalliesByParty } from '../lib/votecounting'
 import find from '../utils/find'
+import HorizontalRule from '../components/HorizontalRule'
 
 const FullTally = styled.div`
   page-break-before: always;
@@ -135,7 +136,7 @@ const TallyScreen = (props: TallyScreenProps) => {
                             }
                           </p>
                         </Prose>
-                        <hr />
+                        <HorizontalRule />
                         <Tally
                           election={election}
                           electionTally={precinctTally}
