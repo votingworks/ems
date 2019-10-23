@@ -27,11 +27,7 @@ export interface TallyScreenProps extends ScreenProps {
 }
 
 const TallyScreen = (props: TallyScreenProps) => {
-  const { election, setCurrentScreen, fullElectionTally } = props
-
-  const goToDashboard = () => {
-    setCurrentScreen('')
-  }
+  const { election, setScreen, fullElectionTally } = props
 
   if (!fullElectionTally) {
     return (
@@ -41,13 +37,13 @@ const TallyScreen = (props: TallyScreenProps) => {
             <Prose>
               <h1>No Tally</h1>
               <p>File did not contain CVR data.</p>
-              <Button onClick={goToDashboard}>Back to Dashboard</Button>
+              <Button onClick={setScreen}>Back to Dashboard</Button>
             </Prose>
           </MainChild>
         </Main>
         <ButtonBar secondary naturalOrder separatePrimaryButton>
           <Brand>VxServer</Brand>
-          <Button small onClick={goToDashboard}>
+          <Button small onClick={setScreen}>
             Dashboard
           </Button>
         </ButtonBar>
@@ -78,7 +74,7 @@ const TallyScreen = (props: TallyScreenProps) => {
                 </Button>
               </p>
               <p>
-                <Button small onClick={goToDashboard}>
+                <Button small onClick={setScreen}>
                   Back to Dashboard
                 </Button>
               </p>
@@ -151,7 +147,7 @@ const TallyScreen = (props: TallyScreenProps) => {
         </Main>
         <ButtonBar secondary naturalOrder separatePrimaryButton>
           <Brand>VxServer</Brand>
-          <Button small onClick={goToDashboard}>
+          <Button small onClick={setScreen}>
             Dashboard
           </Button>
         </ButtonBar>

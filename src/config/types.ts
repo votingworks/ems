@@ -161,7 +161,7 @@ export interface ClerkCardData extends CardData {
 export type SetScreenFunction = (newScreen: string) => void
 export interface ScreenProps {
   election: Election
-  setCurrentScreen: SetScreenFunction
+  setScreen: ButtonEventFunction
 }
 
 // Cast Vote Records

@@ -88,7 +88,7 @@ interface Precinct {
 
 const initialPrecinct: Precinct = { id: '', name: '' }
 
-const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
+const TestDeckScreen = ({ election, setScreen }: ScreenProps) => {
   const [electionTally, setElectionTally] = useState<ElectionTally | undefined>(
     undefined
   )
@@ -207,12 +207,7 @@ const TestDeckScreen = ({ election, setCurrentScreen }: ScreenProps) => {
             All Decks
           </Button>
         )}
-        <Button
-          small
-          onClick={() => {
-            setCurrentScreen('')
-          }}
-        >
+        <Button small onClick={setScreen}>
           Dashboard
         </Button>
       </ButtonBar>

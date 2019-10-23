@@ -11,7 +11,7 @@ import Main, { MainChild } from '../components/Main'
 import Screen from '../components/Screen'
 import HorizontalRule from '../components/HorizontalRule'
 
-const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
+const BallotProofingScreen = ({ election, setScreen }: ScreenProps) => {
   const [ballotStyle, setBallotStyle] = useState<BallotStyle | undefined>(
     undefined
   )
@@ -98,12 +98,7 @@ const BallotProofingScreen = ({ election, setCurrentScreen }: ScreenProps) => {
             All Ballot Styles
           </Button>
         )}
-        <Button
-          small
-          onClick={() => {
-            setCurrentScreen('')
-          }}
-        >
+        <Button small onClick={setScreen}>
           Dashboard
         </Button>
       </ButtonBar>

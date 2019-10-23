@@ -32,6 +32,10 @@ const App: React.FC = () => {
     CastVoteRecordFiles.empty
   )
   const [currentScreen, setCurrentScreen] = useState('')
+  const setScreen: ButtonEventFunction = event => {
+    const { screen = '' } = event.currentTarget.dataset
+    setCurrentScreen(screen)
+  }
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
   )
@@ -175,23 +179,15 @@ const App: React.FC = () => {
         return (
           <TallyScreen
             election={election}
-            setCurrentScreen={setCurrentScreen}
+            setScreen={setScreen}
             fullElectionTally={fullElectionTally}
           />
         )
       case 'testdeck':
-        return (
-          <TestDeckScreen
-            election={election}
-            setCurrentScreen={setCurrentScreen}
-          />
-        )
+        return <TestDeckScreen election={election} setScreen={setScreen} />
       case 'ballotproofing':
         return (
-          <BallotProofingScreen
-            election={election}
-            setCurrentScreen={setCurrentScreen}
-          />
+          <BallotProofingScreen election={election} setScreen={setScreen} />
         )
       case 'dashboard':
       default:
@@ -201,7 +197,7 @@ const App: React.FC = () => {
             election={election}
             programCard={programCard}
             setCastVoteRecordFiles={setCastVoteRecordFiles}
-            setCurrentScreen={setCurrentScreen}
+            setScreen={setScreen}
             setFullElectionTally={setFullElectionTally}
             setVotesByPrecinct={setVotesByPrecinct}
             unconfigure={unconfigure}

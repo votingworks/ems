@@ -5,7 +5,6 @@ import {
   Election,
   FullElectionTally,
   SetCastVoteRecordFilesFunction,
-  SetScreenFunction,
   VotesByPrecinct,
   InputEventFunction,
 } from '../config/types'
@@ -28,7 +27,7 @@ interface Props {
   election: Election
   programCard: ButtonEventFunction
   setCastVoteRecordFiles: SetCastVoteRecordFilesFunction
-  setCurrentScreen: SetScreenFunction
+  setScreen: ButtonEventFunction
   setFullElectionTally: React.Dispatch<
     React.SetStateAction<FullElectionTally | undefined>
   >
@@ -43,25 +42,13 @@ const DashboardScreen = ({
   election,
   programCard,
   setCastVoteRecordFiles,
-  setCurrentScreen,
   setFullElectionTally,
+  setScreen,
   setVotesByPrecinct,
   unconfigure,
   votesByPrecinct,
   exportResults,
 }: Props) => {
-  const gotoTestDeck = () => {
-    setCurrentScreen('testdeck')
-  }
-
-  const gotoBallotProofing = () => {
-    setCurrentScreen('ballotproofing')
-  }
-
-  const showCastVoteRecordsTally = () => {
-    setCurrentScreen('tally')
-  }
-
   const processCastVoteRecordFiles: InputEventFunction = async event => {
     const input = event.currentTarget
     const files = Array.from(input.files || [])
@@ -106,8 +93,10 @@ const DashboardScreen = ({
             <h1>Pre-Election Actions</h1>
             <h2>View Converted Election Data</h2>
             <p>
-              <Button onClick={gotoBallotProofing}>Proof Ballot Styles</Button>{' '}
-              <Button onClick={gotoTestDeck}>
+              <Button onClick={setScreen} data-screen="ballotproofing">
+                Proof Ballot Styles
+              </Button>{' '}
+              <Button onClick={setScreen} data-screen="testdeck">
                 Print Test Ballot Deck Results
               </Button>
             </p>
@@ -274,7 +263,8 @@ const DashboardScreen = ({
             <p>
               <Button
                 disabled={!hasCastVoteRecordFiles}
-                onClick={showCastVoteRecordsTally}
+                onClick={setScreen}
+                data-screen="tally"
               >
                 View Full Election Tally
               </Button>{' '}
