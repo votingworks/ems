@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-cycle
+import CastVoteRecordFiles from '../utils/CastVoteRecordFiles'
+
 // Generic
 export interface Dictionary<T> {
   [key: string]: T | undefined
@@ -163,12 +166,11 @@ export interface ScreenProps {
 
 // Cast Vote Records
 export interface CastVoteRecordFile {
-  content: string
-  name: string
-  count: number
-  precinctIds: string[]
+  readonly name: string
+  readonly count: number
+  readonly precinctIds: readonly string[]
 }
 export type CastVoteRecordFilesDictionary = Dictionary<CastVoteRecordFile>
 export type SetCastVoteRecordFilesFunction = React.Dispatch<
-  React.SetStateAction<Dictionary<CastVoteRecordFile>>
+  React.SetStateAction<CastVoteRecordFiles>
 >

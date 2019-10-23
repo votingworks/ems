@@ -5,9 +5,7 @@ import {
   CardData,
   FullElectionTally,
   OptionalElection,
-  CastVoteRecordFilesDictionary,
   VotesByPrecinct,
-  CastVoteRecordFile,
   ButtonEventFunction,
 } from './config/types'
 
@@ -24,14 +22,15 @@ import 'normalize.css'
 import './App.css'
 import WritingCardScreen from './screens/WritingCardScreen'
 import ConverterClient from './lib/ConverterClient'
+import CastVoteRecordFiles from './utils/CastVoteRecordFiles'
 
 let loadingElection = false
 
 const App: React.FC = () => {
   const [cardReaderWorking, setCardReaderWorking] = useState(true)
-  const [castVoteRecordFiles, setCastVoteRecordFiles] = useState<
-    CastVoteRecordFilesDictionary
-  >({})
+  const [castVoteRecordFiles, setCastVoteRecordFiles] = useState(
+    CastVoteRecordFiles.empty
+  )
   const [currentScreen, setCurrentScreen] = useState('')
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
@@ -44,7 +43,7 @@ const App: React.FC = () => {
 
   const unconfigure = () => {
     setCardReaderWorking(false)
-    setCastVoteRecordFiles({})
+    setCastVoteRecordFiles(CastVoteRecordFiles.empty)
     setCurrentScreen('')
     setElection(undefined)
     setFullElectionTally(undefined)
@@ -120,14 +119,9 @@ const App: React.FC = () => {
   }
 
   const exportResults = async () => {
-    // combine CVR data
-    const files = Object.values(castVoteRecordFiles) as CastVoteRecordFile[]
-    const cvrs = files.reduce(
-      (memo, file) =>
-        memo +
-        (!memo || memo.endsWith('\n') ? file.content : `\n${file.content}`),
-      ''
-    )
+    const CastVoteRecordsString = castVoteRecordFiles.castVoteRecords
+      .map(c => JSON.stringify(c))
+      .join('\n')
 
     // process on the server
     const client = new ConverterClient('results')
@@ -141,7 +135,10 @@ const App: React.FC = () => {
         type: 'application/json',
       })
     )
-    await client.setInputFile(cvrFile.name, new File([cvrs], 'cvrs'))
+    await client.setInputFile(
+      cvrFile.name,
+      new File([CastVoteRecordsString], 'cvrs')
+    )
     await client.process()
 
     // download the result

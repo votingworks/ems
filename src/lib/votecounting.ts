@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import {
   Candidate,
   CastVoteRecord,
@@ -21,15 +22,15 @@ const writeInCandidate: Candidate = {
 }
 
 // CVRs are newline-separated JSON objects
-export const parseCVRs = (castVoteRecords: string) =>
-  castVoteRecords
+export const parseCVRs = (castVoteRecordsString: string) =>
+  castVoteRecordsString
     .split('\n')
     .filter(el => el) // remove empty lines
     .map(line => JSON.parse(line) as CastVoteRecord)
 
 interface VotesByPrecinctParams {
   election: Election
-  castVoteRecords: string
+  castVoteRecords: CastVoteRecord[]
 }
 
 export function getVotesByPrecinct({
@@ -37,7 +38,7 @@ export function getVotesByPrecinct({
   castVoteRecords,
 }: VotesByPrecinctParams): VotesByPrecinct {
   const votesByPrecinct: VotesByPrecinct = {}
-  parseCVRs(castVoteRecords).forEach(CVR => {
+  castVoteRecords.forEach(CVR => {
     const vote: VotesDict = {}
     election.contests.forEach(contest => {
       if (!CVR[contest.id]) {
