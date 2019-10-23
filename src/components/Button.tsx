@@ -16,6 +16,10 @@ interface Props
   extends ButtonInterface,
     React.PropsWithoutRef<JSX.IntrinsicElements['button']> {}
 
+export const buttonFocusStyle = css`
+  outline: rgb(77, 144, 254) dashed 0.25rem;
+`
+
 export const buttonStyles = css<Props>`
   display: inline-block;
   border: none;
@@ -38,7 +42,7 @@ export const buttonStyles = css<Props>`
     (primary && '#FFFFFF') ||
     'black'};
   &:focus {
-    outline: rgb(77, 144, 254) dashed 0.25rem;
+    ${buttonFocusStyle} /* stylelint-disable-line value-keyword-case */
   }
   &:hover,
   &:active {
@@ -53,6 +57,10 @@ export const DecoyButton = styled.div`
 const Button = styled.button.attrs(({ type = 'button' }: Attrs) => ({
   type,
 }))`
+  ${buttonStyles} /* stylelint-disable-line value-keyword-case */
+`
+
+export const LabelButton = styled.label`
   ${buttonStyles} /* stylelint-disable-line value-keyword-case */
 `
 
