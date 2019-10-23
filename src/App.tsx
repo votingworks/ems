@@ -18,6 +18,7 @@ import LoadElectionScreen from './screens/LoadElectionScreen'
 import DashboardScreen from './screens/DashboardScreen'
 import BallotProofingScreen from './screens/BallotProofingScreen'
 import TestDeckScreen from './screens/TestDeckScreen'
+import DistrictTallyScreen from './screens/DistrictTallyScreen'
 import TallyScreen from './screens/TallyScreen'
 
 import 'normalize.css'
@@ -54,8 +55,8 @@ const App: React.FC = () => {
         castVoteRecords: castVoteRecordFiles.castVoteRecords,
       })
       setVotesByPrecinct(vbp)
-
       const ft = fullTallyVotes({ election, votesByPrecinct: vbp })
+      console.log({ vbp, ft })
       setFullElectionTally(ft)
     }
   }, [castVoteRecordFiles, election])
@@ -196,6 +197,14 @@ const App: React.FC = () => {
             election={election}
             setScreen={setScreen}
             fullElectionTally={fullElectionTally}
+          />
+        )
+      case 'district-tally':
+        return (
+          <DistrictTallyScreen
+            election={election}
+            castVoteRecords={castVoteRecordFiles.castVoteRecords}
+            setScreen={setScreen}
           />
         )
       case 'testdeck':

@@ -250,6 +250,13 @@ const DashboardScreen = ({
               </Button>{' '}
               <Button
                 disabled={!hasCastVoteRecordFiles}
+                onClick={setScreen}
+                data-screen="district-tally"
+              >
+                View Tally By District
+              </Button>{' '}
+              <Button
+                disabled={!hasCastVoteRecordFiles}
                 onClick={exportResults}
               >
                 Export SEMS Results File
