@@ -3,13 +3,10 @@ import React from 'react'
 import {
   ButtonEventFunction,
   Election,
-  FullElectionTally,
   SetCastVoteRecordFilesFunction,
   VotesByPrecinct,
   InputEventFunction,
 } from '../config/types'
-
-import { fullTallyVotes, getVotesByPrecinct } from '../lib/votecounting'
 
 import Button from '../components/Button'
 import FileInputButton from '../components/FileInputButton'
@@ -28,10 +25,6 @@ interface Props {
   programCard: ButtonEventFunction
   setCastVoteRecordFiles: SetCastVoteRecordFilesFunction
   setScreen: ButtonEventFunction
-  setFullElectionTally: React.Dispatch<
-    React.SetStateAction<FullElectionTally | undefined>
-  >
-  setVotesByPrecinct: React.Dispatch<React.SetStateAction<VotesByPrecinct>>
   unconfigure: () => void
   votesByPrecinct: VotesByPrecinct
   exportResults: () => void
@@ -42,9 +35,7 @@ const DashboardScreen = ({
   election,
   programCard,
   setCastVoteRecordFiles,
-  setFullElectionTally,
   setScreen,
-  setVotesByPrecinct,
   unconfigure,
   votesByPrecinct,
   exportResults,
@@ -53,18 +44,7 @@ const DashboardScreen = ({
     const input = event.currentTarget
     const files = Array.from(input.files || [])
     const newCastVoteRecordFiles = await castVoteRecordFiles.addAll(files)
-
     setCastVoteRecordFiles(newCastVoteRecordFiles)
-
-    const vbp = getVotesByPrecinct({
-      election,
-      castVoteRecords: newCastVoteRecordFiles.castVoteRecords,
-    })
-    setVotesByPrecinct(vbp)
-
-    const ft = fullTallyVotes({ election, votesByPrecinct: vbp })
-    setFullElectionTally(ft)
-
     input.value = ''
   }
 

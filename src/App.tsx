@@ -1,5 +1,5 @@
 import fileDownload from 'js-file-download'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   CardData,
@@ -11,6 +11,8 @@ import {
 
 import useStateAndLocalStorage from './hooks/useStateWithLocalStorage'
 import useInterval from './hooks/useInterval'
+
+import { fullTallyVotes, getVotesByPrecinct } from './lib/votecounting'
 
 import LoadElectionScreen from './screens/LoadElectionScreen'
 import DashboardScreen from './screens/DashboardScreen'
@@ -44,6 +46,19 @@ const App: React.FC = () => {
   >(undefined)
   const [isProgrammingCard, setIsProgrammingCard] = useState(false)
   const [votesByPrecinct, setVotesByPrecinct] = useState<VotesByPrecinct>({})
+
+  useEffect(() => {
+    if (election) {
+      const vbp = getVotesByPrecinct({
+        election,
+        castVoteRecords: castVoteRecordFiles.castVoteRecords,
+      })
+      setVotesByPrecinct(vbp)
+
+      const ft = fullTallyVotes({ election, votesByPrecinct: vbp })
+      setFullElectionTally(ft)
+    }
+  }, [castVoteRecordFiles, election])
 
   const unconfigure = () => {
     setCardReaderWorking(false)
@@ -198,8 +213,6 @@ const App: React.FC = () => {
             programCard={programCard}
             setCastVoteRecordFiles={setCastVoteRecordFiles}
             setScreen={setScreen}
-            setFullElectionTally={setFullElectionTally}
-            setVotesByPrecinct={setVotesByPrecinct}
             unconfigure={unconfigure}
             votesByPrecinct={votesByPrecinct}
             exportResults={exportResults}
