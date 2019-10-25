@@ -24,6 +24,7 @@ interface Props {
   election: Election
   programCard: ButtonEventFunction
   setCastVoteRecordFiles: SetCastVoteRecordFilesFunction
+  setUploadedFiles: any
   setScreen: ButtonEventFunction
   unconfigure: () => void
   votesByPrecinct: VotesByPrecinct
@@ -35,6 +36,7 @@ const DashboardScreen = ({
   election,
   programCard,
   setCastVoteRecordFiles,
+  setUploadedFiles,
   setScreen,
   unconfigure,
   votesByPrecinct,
@@ -43,6 +45,7 @@ const DashboardScreen = ({
   const processCastVoteRecordFiles: InputEventFunction = async event => {
     const input = event.currentTarget
     const files = Array.from(input.files || [])
+    setUploadedFiles(files)
     const newCastVoteRecordFiles = await castVoteRecordFiles.addAll(files)
     setCastVoteRecordFiles(newCastVoteRecordFiles)
     input.value = ''
@@ -70,29 +73,31 @@ const DashboardScreen = ({
       <Main>
         <MainChild maxWidth={false}>
           <Prose maxWidth={false}>
-            <h1>Pre-Election Actions</h1>
-            <h2>View Converted Election Data</h2>
-            <p>
-              <Button onClick={setScreen} data-screen="ballotproofing">
-                Proof Ballot Styles
-              </Button>{' '}
-              <Button onClick={setScreen} data-screen="testdeck">
-                Print Test Ballot Deck Results
-              </Button>
-            </p>
-            <h2>Program Cards</h2>
-            <p>
-              <Button onClick={programCard} data-id="clerk">
-                Election Clerk Card
-              </Button>{' '}
-              <Button onClick={programCard} data-id="pollworker">
-                Poll Worker Card
-              </Button>{' '}
-              <Button onClick={programCard} data-id="override">
-                Override Write Protection
-              </Button>
-            </p>
-            <HorizontalRule />
+            <div style={{ display: 'none' }}>
+              <h1>Pre-Election Actions</h1>
+              <h2>View Converted Election Data</h2>
+              <p>
+                <Button onClick={setScreen} data-screen="ballotproofing">
+                  Proof Ballot Styles
+                </Button>{' '}
+                <Button onClick={setScreen} data-screen="testdeck">
+                  Print Test Ballot Deck Results
+                </Button>
+              </p>
+              <h2>Program Cards</h2>
+              <p>
+                <Button onClick={programCard} data-id="clerk">
+                  Election Clerk Card
+                </Button>{' '}
+                <Button onClick={programCard} data-id="pollworker">
+                  Poll Worker Card
+                </Button>{' '}
+                <Button onClick={programCard} data-id="override">
+                  Override Write Protection
+                </Button>
+              </p>
+              <HorizontalRule />
+            </div>
             <h1>Election Day Actions</h1>
             <h2>Cast Vote Record (CVR) files</h2>
             <Table>
@@ -186,6 +191,13 @@ const DashboardScreen = ({
                 onClick={resetCastVoteRecordFiles}
               >
                 Remove All CVR Files
+              </Button>{' '}
+              <Button
+                disabled={!hasCastVoteRecordFiles}
+                onClick={setScreen}
+                data-screen="district-tally"
+              >
+                View Tally By District
               </Button>
             </p>
             <h2>Ballot Count By Precinct</h2>

@@ -28,6 +28,10 @@ export const parseCVRs = (castVoteRecordsString: string) =>
     .filter(el => el) // remove empty lines
     .map(line => JSON.parse(line) as CastVoteRecord)
 
+export const getTallyByDistrictByContestByPrecinct = () => {
+  return []
+}
+
 interface VotesByPrecinctParams {
   election: Election
   castVoteRecords: CastVoteRecord[]

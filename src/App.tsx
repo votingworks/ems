@@ -34,6 +34,9 @@ const App: React.FC = () => {
   const [castVoteRecordFiles, setCastVoteRecordFiles] = useState(
     CastVoteRecordFiles.empty
   )
+  const [uploadedFiles, setUploadedFiles] = useStateAndLocalStorage(
+    'uploadeFiles'
+  )
   const [currentScreen, setCurrentScreen] = useState('')
   const setScreen: ButtonEventFunction = event => {
     const { screen = '' } = event.currentTarget.dataset
@@ -221,6 +224,7 @@ const App: React.FC = () => {
             election={election}
             programCard={programCard}
             setCastVoteRecordFiles={setCastVoteRecordFiles}
+            setUploadedFiles={setUploadedFiles}
             setScreen={setScreen}
             unconfigure={unconfigure}
             votesByPrecinct={votesByPrecinct}

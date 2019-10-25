@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ScreenProps, CastVoteRecord } from '../config/types'
+import { ScreenProps, CastVoteRecord, District } from '../config/types'
 
 import Button from '../components/Button'
 import Brand from '../components/Brand'
@@ -36,46 +36,74 @@ const TallyScreen = (props: TallyScreenProps) => {
 
   // get ballot styles that map to district
   const stateWideContestDistricts = stateWideContests.reduce(
-    (districts: string[], contest) => {
-      if (!districts.includes(contest.districtId)) {
-        districts.push(contest.districtId)
+    (districts: District[], contest) => {
+      const district = election.districts.find(d => d.id === contest.districtId)
+      const districtAdded = districts.find(d => d.id === contest.districtId)
+      if (district && !districtAdded) {
+        districts.push(district)
       }
+      // if (!districts.includes(contest.districtId)) {
+      //   districts.push(contest.districtId)
+      // }
       return districts
     },
     []
   )
-  console.log({ stateWideContestDistricts })
-  const ballotStylesIdsForStateWideContestDistricts = election.ballotStyles
-    .filter(bs =>
-      bs.districts.filter(id => stateWideContestDistricts.includes(id))
-    )
-    .map(bs => bs.id)
-  console.log({ ballotStylesIdsForStateWideContestDistricts })
+  // console.log({ stateWideContestDistricts })
+
+  const ballotStylesForStateWideContestDistricts = election.ballotStyles.filter(
+    bs =>
+      bs.districts.filter(id =>
+        stateWideContestDistricts.find(d => d.id === id)
+      )
+  )
+  console.log({ ballotStylesForStateWideContestDistricts })
 
   // get ballots matching those styles
   const castVoteRecordsForStateWideContests = castVoteRecords.filter(cvr =>
-    ballotStylesIdsForStateWideContestDistricts.includes(cvr._ballotStyleId)
+    ballotStylesForStateWideContestDistricts.some(
+      bs => bs.id === cvr._ballotStyleId
+    )
   )
-  console.log({ castVoteRecordsForStateWideContests })
+  // console.log({ castVoteRecordsForStateWideContests })
 
   // tally contests by precinct.
 
-  const tallyByDistrict = [
+  const tally = stateWideContestDistricts.map(d => ({
+    district: d,
+    contests: election.contests
+      .filter(c => c.districtId === d.id)
+      .map(c => ({
+        contest: c,
+        precincts: election.precincts.map(p => ({
+          precinct: p,
+          tallies: [],
+        })),
+      })),
+  }))
+
+  const _tallyByDistrict = [
     {
-      contest: {},
-      precincts: [
+      district: {},
+      contests: [
         {
-          precinct: {},
-          tallies: [
+          contest: {},
+          precincts: [
             {
-              option: {}, // candidate || yes/no
-              tally: 8,
+              precinct: {},
+              tallies: [
+                {
+                  option: {}, // candidate || yes/no
+                  tally: 8,
+                },
+              ],
             },
           ],
         },
       ],
     },
   ]
+  console.log({ _tallyByDistrict, tally })
 
   return (
     <Screen>
