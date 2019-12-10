@@ -32,6 +32,7 @@ const App: React.FC = () => {
     CastVoteRecordFiles.empty
   )
   const [currentScreen, setCurrentScreen] = useState('')
+  const [precinctIdTallyFilter, setPrecinctIdTallyFilter] = useState('')
   const [election, setElection] = useStateAndLocalStorage<OptionalElection>(
     'election'
   )
@@ -45,6 +46,7 @@ const App: React.FC = () => {
     setCardReaderWorking(false)
     setCastVoteRecordFiles(CastVoteRecordFiles.empty)
     setCurrentScreen('')
+    setPrecinctIdTallyFilter('')
     setElection(undefined)
     setFullElectionTally(undefined)
     setIsProgrammingCard(false)
@@ -177,7 +179,8 @@ const App: React.FC = () => {
             <TallyScreen
               election={election}
               setCurrentScreen={setCurrentScreen}
-              fullElectionTally={fullElectionTally}
+              precinctIdTallyFilter={precinctIdTallyFilter}
+              fullElectionTally={fullElectionTally as FullElectionTally}
             />
           )
         case 'testdeck':
@@ -201,9 +204,11 @@ const App: React.FC = () => {
       <DashboardScreen
         castVoteRecordFiles={castVoteRecordFiles}
         election={election}
+        fullElectionTally={fullElectionTally}
         programCard={programCard}
         setCastVoteRecordFiles={setCastVoteRecordFiles}
         setCurrentScreen={setCurrentScreen}
+        setPrecinctIdTallyFilter={setPrecinctIdTallyFilter}
         setFullElectionTally={setFullElectionTally}
         setVotesByPrecinct={setVotesByPrecinct}
         unconfigure={unconfigure}

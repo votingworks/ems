@@ -26,12 +26,14 @@ import CastVoteRecordFiles from '../utils/CastVoteRecordFiles'
 interface Props {
   castVoteRecordFiles: CastVoteRecordFiles
   election: Election
+  fullElectionTally: FullElectionTally | undefined
   programCard: ButtonEventFunction
   setCastVoteRecordFiles: SetCastVoteRecordFilesFunction
   setCurrentScreen: SetScreenFunction
   setFullElectionTally: React.Dispatch<
     React.SetStateAction<FullElectionTally | undefined>
   >
+  setPrecinctIdTallyFilter: React.Dispatch<React.SetStateAction<string>>
   setVotesByPrecinct: React.Dispatch<React.SetStateAction<VotesByPrecinct>>
   unconfigure: () => void
   votesByPrecinct: VotesByPrecinct
@@ -41,10 +43,12 @@ interface Props {
 const DashboardScreen = ({
   castVoteRecordFiles,
   election,
+  fullElectionTally,
   programCard,
   setCastVoteRecordFiles,
   setCurrentScreen,
   setFullElectionTally,
+  setPrecinctIdTallyFilter,
   setVotesByPrecinct,
   unconfigure,
   votesByPrecinct,
@@ -58,8 +62,12 @@ const DashboardScreen = ({
     setCurrentScreen('ballotproofing')
   }
 
-  const showCastVoteRecordsTally = () => {
+  const setPrecinctTally = (precinctId?: string) => {
+    setPrecinctIdTallyFilter(precinctId || '')
     setCurrentScreen('tally')
+  }
+  const showCastVoteRecordsTally = () => {
+    setPrecinctTally()
   }
 
   const processCastVoteRecordFiles: InputEventFunction = async event => {
@@ -229,6 +237,7 @@ const DashboardScreen = ({
                         Precinct
                       </TD>
                       <TD as="th">Ballot Count</TD>
+                      <TD as="th">View Tally</TD>
                     </tr>
                     {election.precincts
                       .sort((a, b) =>
@@ -241,24 +250,46 @@ const DashboardScreen = ({
                           votesByPrecinct && votesByPrecinct[precinct.id]
                             ? votesByPrecinct[precinct.id]!.length
                             : 0
+                        const showPrecinctTally = () => {
+                          setPrecinctTally(precinct.id)
+                        }
                         return (
                           <tr key={precinct.id}>
                             <TD narrow nowrap>
                               {precinct.name}
                             </TD>
                             <TD>{precinctBallotsCount}</TD>
+                            <TD>
+                              {!!precinctBallotsCount && (
+                                <Button small onClick={showPrecinctTally}>
+                                  View {precinct.name} Tally
+                                </Button>
+                              )}
+                            </TD>
                           </tr>
                         )
                       })}
                     <tr>
-                      <TD as="th" narrow>
-                        Total Ballots Count
+                      <TD narrow>
+                        <strong>Total Ballot Count</strong>
                       </TD>
-                      <TD as="th">
-                        {Object.values(votesByPrecinct).reduce(
-                          (prev, curr) => prev + (curr ? curr.length : 0),
-                          0
-                        )}
+                      <TD>
+                        <strong>
+                          {Object.values(votesByPrecinct).reduce(
+                            (prev, curr) => prev + (curr ? curr.length : 0),
+                            0
+                          )}
+                        </strong>
+                      </TD>
+                      <TD>
+                        <Button
+                          disabled={
+                            !hasCastVoteRecordFiles || !fullElectionTally
+                          }
+                          onClick={showCastVoteRecordsTally}
+                        >
+                          View Full Election Tally
+                        </Button>
                       </TD>
                     </tr>
                   </React.Fragment>
@@ -272,12 +303,6 @@ const DashboardScreen = ({
               </tbody>
             </Table>
             <p>
-              <Button
-                disabled={!hasCastVoteRecordFiles}
-                onClick={showCastVoteRecordsTally}
-              >
-                View Full Election Tally
-              </Button>{' '}
               <Button
                 disabled={!hasCastVoteRecordFiles}
                 onClick={exportResults}
