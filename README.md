@@ -1,6 +1,4 @@
-# VotingWorks Election Management System
-
-This app is also known as **VxServer**.
+# VotingWorks Election Management System (EMS) or VxServer
 
 ## Public Demo
 
@@ -9,41 +7,34 @@ This app is also known as **VxServer**.
 Each [pull request](https://github.com/votingworks/ems/pulls) will have a unique
 demo url which can be found in the comments of the pull request.
 
-## Install and Run App Locally
+## Install
 
-This assumes you have `git` and `yarn` installed.
+Prerequisites:
 
-1. Clone the repo:
+- `git`
+- `yarn`
+- [`module-converter-sems`](https://github.com/votingworks/module-converter-sems.git)
+- [`module-smartcards`](https://github.com/votingworks/module-smartcards/)
 
-   ```
-   git clone https://github.com/votingworks/ems.git
-   ```
+Then…
 
-2. Install dependencies:
+```
+git clone https://github.com/votingworks/ems.git
+cd ems
+yarn install
+```
 
-   ```
-   yarn install
-   ```
+## Run
 
-3. Run the app in your local browser:
+1. Start
+   [`module-converter-sems`](https://github.com/votingworks/module-converter-sems.git).
+2. Start
+   [`module-smartcards`](https://github.com/votingworks/module-smartcards/).
+3. Start the app:
 
    ```
    yarn start
    ```
-
-## Contributing
-
-TBD
-
-## Local Development Scripts
-
-- `yarn install` - Install the dependencies.
-- `yarn start` - Run the app locally.
-- `yarn test`- Run tests in interactive mode.
-- `yarn lint` - lint and format JavaScript & TypeScript
-- `yarn format` - format other files (non JavaScript & TypeScript files)
-
-See `package.json` for all available scripts.
 
 ## Technical Implementation
 
