@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import {
   Candidate,
+  CandidateVote,
   CastVoteRecord,
   ContestOption,
   ContestOptionTally,
@@ -103,21 +104,26 @@ export function tallyVotes({ election, precinctId, votes }: TallyParams) {
       )
 
     votes.forEach(vote => {
-      const selectedOption = vote[contest.id]
-      if (!selectedOption) {
+      const selected = vote[contest.id]
+      if (!selected) {
         return
       }
 
-      const optionTally = find(tallies, optionTally => {
-        if (contest.type === 'yesno') {
-          return optionTally.option === selectedOption
-        } else {
-          const candidateOption = optionTally.option as Candidate
-          const selectedCandidateOption = selectedOption[0] as Candidate
-          return candidateOption.id === selectedCandidateOption.id
-        }
-      })
-      optionTally.tally += 1
+      if (contest.type === 'yesno') {
+        const optionTally = find(tallies, optionTally => {
+          return optionTally.option === selected
+        })
+        optionTally.tally += 1
+      } else {
+        ;(selected as CandidateVote).forEach(selectedOption => {
+          const optionTally = find(tallies, optionTally => {
+            const candidateOption = optionTally.option as Candidate
+            const selectedCandidateOption = selectedOption as Candidate
+            return candidateOption.id === selectedCandidateOption.id
+          })
+          optionTally.tally += 1
+        })
+      }
     })
 
     electionTally.contestTallies.push({ contest, tallies })
