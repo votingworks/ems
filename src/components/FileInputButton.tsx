@@ -31,7 +31,7 @@ interface Props extends HiddenFileInputProps {
 }
 
 const FileInputButton = ({
-  accept = 'text/plain',
+  accept = '*/*',
   buttonProps,
   children,
   id,

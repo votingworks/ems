@@ -182,6 +182,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                     }}
                     id="vx-election"
                     name="vx-election"
+                    accept=".json,application/json"
                     onChange={handleVxElectionFile}
                   >
                     Vx Election Definition file
