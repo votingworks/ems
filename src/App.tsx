@@ -43,7 +43,6 @@ const App: React.FC = () => {
   const [votesByPrecinct, setVotesByPrecinct] = useState<VotesByPrecinct>({})
 
   const unconfigure = () => {
-    setCardReaderWorking(false)
     setCastVoteRecordFiles(CastVoteRecordFiles.empty)
     setCurrentScreen('')
     setPrecinctIdTallyFilter('')
@@ -165,7 +164,7 @@ const App: React.FC = () => {
           setCardReaderWorking(false)
         })
     },
-    cardReaderWorking ? 1000 : undefined
+    cardReaderWorking && !election ? 1000 : undefined
   )
 
   if (election) {
