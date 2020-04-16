@@ -39,7 +39,7 @@ const BuildElectionScreen = ({
               onChange={handleChange}
             />
             <br />
-            <Button onClick={done}>Save</Button>
+            <Button onClick={done}>Done</Button>
           </form>
         </MainChild>
       </Main>
