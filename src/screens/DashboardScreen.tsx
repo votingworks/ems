@@ -58,6 +58,10 @@ const DashboardScreen = ({
     setCurrentScreen('testdeck')
   }
 
+  const gotoBuildElection = () => {
+    setCurrentScreen('buildelection')
+  }
+
   const gotoBallotProofing = () => {
     setCurrentScreen('ballotproofing')
   }
@@ -112,6 +116,10 @@ const DashboardScreen = ({
         <MainChild maxWidth={false}>
           <Prose maxWidth={false}>
             <h1>Pre-Election Actions</h1>
+            <h2>Define Election</h2>
+            <p>
+              <Button onClick={gotoBuildElection}>Build Election</Button>
+            </p>
             <h2>View Converted Election Data</h2>
             <p>
               <Button onClick={gotoBallotProofing}>Proof Ballot Styles</Button>{' '}
