@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { ScreenProps } from '../config/types'
 
@@ -7,24 +7,29 @@ import Main, { MainChild } from '../components/Main'
 import MainNav from '../components/MainNav'
 import Screen from '../components/Screen'
 
-const BuildElectionScreen = ({
+const ElectionEditScreen = ({
   election,
   setElection,
   setCurrentScreen,
 }: ScreenProps) => {
-  const done = () => {
-    setCurrentScreen('')
-  }
+  const [electionString, setElectionString] = useState(
+    JSON.stringify(election, undefined, 4)
+  )
 
-  const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const done = () => {
     try {
-      const newElection = JSON.parse(evt.target.value)
+      const newElection = JSON.parse(electionString)
       if (newElection && setElection) {
         setElection(newElection)
+        setCurrentScreen('')
       }
     } catch {
       // es-lint-disable-next-line no-empty
     }
+  }
+
+  const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setElectionString(evt.target.value)
   }
 
   return (
@@ -33,7 +38,7 @@ const BuildElectionScreen = ({
         <MainChild maxWidth={false}>
           <form>
             <textarea
-              value={JSON.stringify(election, undefined, 4)}
+              value={electionString}
               cols={80}
               rows={50}
               onChange={handleChange}
@@ -43,7 +48,7 @@ const BuildElectionScreen = ({
           </form>
         </MainChild>
       </Main>
-      <MainNav title="Build Election">
+      <MainNav title="Edit Election">
         <Button small onClick={done}>
           Dashboard
         </Button>
@@ -52,4 +57,4 @@ const BuildElectionScreen = ({
   )
 }
 
-export default BuildElectionScreen
+export default ElectionEditScreen
