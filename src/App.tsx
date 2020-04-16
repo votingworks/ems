@@ -17,7 +17,7 @@ import DashboardScreen from './screens/DashboardScreen'
 import BallotProofingScreen from './screens/BallotProofingScreen'
 import TestDeckScreen from './screens/TestDeckScreen'
 import TallyScreen from './screens/TallyScreen'
-import BuildElectionScreen from './screens/BuildElectionScreen'
+import ElectionEditScreen from './screens/ElectionEditScreen'
 
 import 'normalize.css'
 import './App.css'
@@ -197,9 +197,9 @@ const App: React.FC = () => {
               setCurrentScreen={setCurrentScreen}
             />
           )
-        case 'buildelection':
+        case 'electionedit':
           return (
-            <BuildElectionScreen
+            <ElectionEditScreen
               election={election}
               setElection={setElection}
               setCurrentScreen={setCurrentScreen}
