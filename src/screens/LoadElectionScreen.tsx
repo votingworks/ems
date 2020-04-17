@@ -153,7 +153,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
               <React.Fragment>
                 <h1>Configure VxServer</h1>
                 {inputFiles.length > 0 && (
-                  <div>
+                  <React.Fragment>
                     <p>Select the following files from a USB drive, etc.</p>
                     <HorizontalRule />
                     {inputFiles.map((file: VxFile, i: number) =>
@@ -175,7 +175,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                       )
                     )}
                     <HorizontalRule>or</HorizontalRule>
-                  </div>
+                  </React.Fragment>
                 )}
                 {vxElectionFileIsInvalid && (
                   <Invalid>Invalid Vx Election Definition file.</Invalid>
