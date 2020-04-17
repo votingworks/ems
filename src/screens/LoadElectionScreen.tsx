@@ -93,6 +93,7 @@ const LoadElectionScreen = ({ setElection }: Props) => {
       setIsLoading(false)
     } catch (error) {
       console.log('failed updateStatus()', error) // eslint-disable-line no-console
+      setIsLoading(false)
     }
   }
 
@@ -151,27 +152,31 @@ const LoadElectionScreen = ({ setElection }: Props) => {
             ) : (
               <React.Fragment>
                 <h1>Configure VxServer</h1>
-                <p>Select the following files from a USB drive, etc.</p>
-                <HorizontalRule />
-                {inputFiles.map((file: VxFile, i: number) =>
-                  file.path ? (
-                    <Loaded key={file.name}>{`Loaded ${file.name}`}</Loaded>
-                  ) : (
-                    <p key={file.name}>
-                      <FileInputButton
-                        buttonProps={{
-                          fullWidth: true,
-                        }}
-                        id={`f${i}`}
-                        name={file.name}
-                        onChange={handleFileInput}
-                      >
-                        {file.name}
-                      </FileInputButton>
-                    </p>
-                  )
+                {inputFiles.length > 0 && (
+                  <div>
+                    <p>Select the following files from a USB drive, etc.</p>
+                    <HorizontalRule />
+                    {inputFiles.map((file: VxFile, i: number) =>
+                      file.path ? (
+                        <Loaded key={file.name}>{`Loaded ${file.name}`}</Loaded>
+                      ) : (
+                        <p key={file.name}>
+                          <FileInputButton
+                            buttonProps={{
+                              fullWidth: true,
+                            }}
+                            id={`f${i}`}
+                            name={file.name}
+                            onChange={handleFileInput}
+                          >
+                            {file.name}
+                          </FileInputButton>
+                        </p>
+                      )
+                    )}
+                    <HorizontalRule>or</HorizontalRule>
+                  </div>
                 )}
-                <HorizontalRule>or</HorizontalRule>
                 {vxElectionFileIsInvalid && (
                   <Invalid>Invalid Vx Election Definition file.</Invalid>
                 )}
@@ -189,17 +194,19 @@ const LoadElectionScreen = ({ setElection }: Props) => {
                   </FileInputButton>
                 </p>
                 <HorizontalRule />
-                <p>
-                  <Button
-                    disabled={
-                      !someFilesExist(inputFiles) && !vxElectionFileIsInvalid
-                    }
-                    small
-                    onClick={resetUploadFiles}
-                  >
-                    Reset Files
-                  </Button>
-                </p>
+                {inputFiles.length > 0 && (
+                  <p>
+                    <Button
+                      disabled={
+                        !someFilesExist(inputFiles) && !vxElectionFileIsInvalid
+                      }
+                      small
+                      onClick={resetUploadFiles}
+                    >
+                      Reset Files
+                    </Button>
+                  </p>
+                )}
               </React.Fragment>
             )}
           </Prose>
