@@ -131,10 +131,12 @@ export interface FullElectionTally {
 
 // Cast Vote Record
 
-export interface CastVoteRecord extends Dictionary<string | string[]> {
+export interface CastVoteRecord
+  extends Dictionary<boolean | string | string[]> {
   _precinctId: string
   _ballotId: string
   _ballotStyleId: string
+  _testBallot: boolean
 }
 
 // Smart Card Content
