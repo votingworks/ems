@@ -137,6 +137,7 @@ export interface CastVoteRecord
   _ballotId: string
   _ballotStyleId: string
   _testBallot: boolean
+  _scannerId: string
 }
 
 // Smart Card Content
